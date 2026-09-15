@@ -1,0 +1,8 @@
+{
+  "name": "graphlab-learning",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {"dev":"next dev --hostname 127.0.0.1", "build":"next build", "start":"next start --hostname 0.0.0.0", "typecheck":"tsc --noEmit"},
+  "dependencies": {"next":"15.5.12","react":"19.1.6","react-dom":"19.1.6","@monaco-editor/react":"4.7.0","monaco-editor":"0.52.2","lucide-react":"0.468.0","react-markdown":"10.1.0","remark-gfm":"4.0.1","oidc-client-ts":"3.2.1"},
+  "devDependencies": {"typescript":"5.8.3","@types/node":"22.15.18","@types/react":"19.1.4","@types/react-dom":"19.1.5"}
+}
