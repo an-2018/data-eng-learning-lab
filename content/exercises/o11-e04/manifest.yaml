@@ -1,0 +1,117 @@
+id: o11-e04
+title: Model a broader category
+module_id: o11
+version: 1.0.0
+dataset_version: '1'
+grader_version: '1'
+runtime_version: '1'
+difficulty: Intermediate
+mode: practice
+runner: rdf
+minutes: 15
+objectives:
+- State that HandTools has the broader SKOS concept Tools.
+prerequisites:
+- o11-e01
+statement: 'State that HandTools has the broader SKOS concept Tools.
+
+
+  Create exactly the stated facts, with no extra triples. Blank-node labels may differ.
+  In open-ended projects, additional modeling choices are assessed separately by rubric.'
+requirements:
+- Implement the behavior described above for every fixture.
+- Use the exact output variable names or file contract shown in the task.
+- Preserve identity, datatypes, and duplicate rows unless the task explicitly requests
+  a change.
+starter:
+  ontology.ttl: '@prefix ex: <https://example.org/> .
+
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+
+    # Write your model here.
+
+    '
+solution:
+  ontology.ttl: '@prefix ex: <https://example.org/> .
+
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+    ex:HandTools <http://www.w3.org/2004/02/skos/core#broader> ex:Tools .'
+explanation: Use resource IRIs for entities and typed literals for scalar values.
+  The graph is compared structurally, not as Turtle text.
+hints:
+- Start with the entity or output grain requested by the question.
+- Use resource IRIs for entities and typed literals for scalar values. The graph is
+  compared structurally, not as Turtle text.
+- Use the public dataset to trace one result from its inputs. Then consider missing
+  values and repeated matches.
+sources:
+- title: W3C SKOS Reference
+  url: https://www.w3.org/TR/skos-reference/
+- title: W3C OWL 2 Primer
+  url: https://www.w3.org/TR/owl2-primer/
+source_review_date: '2026-09-15'
+status: ready
+review_status: authored_pending_runtime_audit
+fixtures:
+- name: Required graph
+  public: true
+  data: No initial triples. Create the stated graph.
+  input:
+    data: ''
+  expected:
+    graph: '@prefix ex: <https://example.org/> .
+
+      @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+      @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+      @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+      @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+      @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+      ex:HandTools <http://www.w3.org/2004/02/skos/core#broader> ex:Tools .'
+  feedback: Compare resource versus literal values, datatypes, predicates, and the
+    exact set of required triples.
+execution:
+  query: CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o }
+grading:
+  kind: graph
+questions: []
+wrong_solutions:
+- ontology.ttl: '@prefix ex: <https://example.org/> .
+
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+    '
+variant_group: o11
+rubric:
+- All stated executable requirements pass.
+- Explain why the implementation has the intended meaning.

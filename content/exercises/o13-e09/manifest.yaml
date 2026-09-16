@@ -1,0 +1,232 @@
+id: o13-e09
+title: 'Checkpoint: retry-safe normalization'
+module_id: o13
+version: 1.0.0
+dataset_version: '1'
+grader_version: '1'
+runtime_version: '1'
+difficulty: Advanced
+mode: assessment
+runner: ingestion
+minutes: 20
+objectives:
+- 'Implement this SPARQL Update transformation: checkpoint: retry-safe normalization.'
+prerequisites:
+- o13-e01
+statement: 'Implement this SPARQL Update transformation: checkpoint: retry-safe normalization.
+
+
+  The verification query is:
+
+  ```sparql
+
+  PREFIX ex: <https://example.org/>
+
+  PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+  PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+  PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+  SELECT ?s ?name ?id WHERE { GRAPH ex:published { ?s ex:name ?name ; ex:employeeId
+  ?id } }
+
+  ```
+
+
+  Publish name from rawName together with employeeId for every subject that has both.
+  The runner repeats the transaction; retries must not duplicate facts.'
+requirements:
+- Implement the behavior described above for every fixture.
+- Use the exact output variable names or file contract shown in the task.
+- Preserve identity, datatypes, and duplicate rows unless the task explicitly requests
+  a change.
+starter:
+  update.rq: 'PREFIX ex: <https://example.org/>
+
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+
+    # Write a complete query here.
+
+    '
+solution:
+  update.rq: 'PREFIX ex: <https://example.org/>
+
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+    INSERT { GRAPH ex:published { ?s ex:name ?name ; ex:employeeId ?id } } WHERE {
+    ?s ex:rawName ?name ; ex:employeeId ?id }'
+explanation: Use explicit named graphs and stable subject identifiers. The transaction
+  controls commit versus abort; your update must be safe when repeated.
+hints:
+- Start with the entity or output grain requested by the question.
+- Use explicit named graphs and stable subject identifiers. The transaction controls
+  commit versus abort; your update must be safe when repeated.
+- Use the public dataset to trace one result from its inputs. Then consider missing
+  values and repeated matches.
+sources:
+- title: W3C SPARQL 1.1 Update
+  url: https://www.w3.org/TR/sparql11-update/
+- title: W3C PROV-O
+  url: https://www.w3.org/TR/prov-o/
+- title: Apache Jena Transactions
+  url: https://jena.apache.org/documentation/txn/
+source_review_date: '2026-09-15'
+status: ready
+review_status: authored_pending_runtime_audit
+fixtures:
+- name: Snapshot sample
+  public: true
+  data: '@prefix ex: <https://example.org/> .
+
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+    ex:ava a ex:Person ; ex:rawName "Ava" ; ex:employeeId "E1" . ex:ben a ex:Person
+    ; ex:rawName "Ben" .'
+  input:
+    data: '@prefix ex: <https://example.org/> .
+
+      @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+      @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+      @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+      @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+      @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+      ex:ava a ex:Person ; ex:rawName "Ava" ; ex:employeeId "E1" . ex:ben a ex:Person
+      ; ex:rawName "Ben" .'
+    repeats: 2
+    abortFirst: false
+  expected:
+    results:
+      bindings:
+      - s:
+          type: uri
+          value: https://example.org/ava
+        id:
+          type: literal
+          value: E1
+        name:
+          type: literal
+          value: Ava
+    head:
+      vars:
+      - s
+      - name
+      - id
+  feedback: Check named-graph scope, stable identities, retry behavior, and the requested
+    output facts.
+- name: Retry after rollback
+  public: false
+  data: '@prefix ex: <https://example.org/> .
+
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+    ex:cyra a ex:Person ; ex:rawName "Cyra" ; ex:employeeId "E3" . ex:dev a ex:Person
+    .'
+  input:
+    data: '@prefix ex: <https://example.org/> .
+
+      @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+      @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+      @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+      @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+      @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+      ex:cyra a ex:Person ; ex:rawName "Cyra" ; ex:employeeId "E3" . ex:dev a ex:Person
+      .'
+    repeats: 2
+    abortFirst: false
+  expected:
+    results:
+      bindings:
+      - s:
+          type: uri
+          value: https://example.org/cyra
+        id:
+          type: literal
+          value: E3
+        name:
+          type: literal
+          value: Cyra
+    head:
+      vars:
+      - s
+      - name
+      - id
+  feedback: Check named-graph scope, stable identities, retry behavior, and the requested
+    output facts.
+execution:
+  query: 'PREFIX ex: <https://example.org/>
+
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+    SELECT ?s ?name ?id WHERE { GRAPH ex:published { ?s ex:name ?name ; ex:employeeId
+    ?id } }'
+grading:
+  kind: sparql
+questions:
+- id: meaning
+  prompt: What does a passing executable check establish?
+  options:
+  - The stated behavior holds on the tested fixtures.
+  - Every possible model is correct.
+  - The ontology is complete for the entire world.
+  answer: The stated behavior holds on the tested fixtures.
+- id: evidence
+  prompt: How should an infrastructure error affect mastery?
+  options:
+  - It should count as a wrong answer.
+  - It should not change mastery.
+  - It should count as a pass.
+  answer: It should not change mastery.
+wrong_solutions:
+- update.rq: 'PREFIX ex: <https://example.org/>
+
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+    SELECT ?wrong WHERE { FILTER(false) }'
+variant_group: o13
+rubric:
+- All stated executable requirements pass.
+- Explain why the implementation has the intended meaning.

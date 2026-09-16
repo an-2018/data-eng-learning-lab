@@ -1,0 +1,227 @@
+id: o09-e04
+title: Require Company-valued employers
+module_id: o09
+version: 1.0.0
+dataset_version: '1'
+grader_version: '1'
+runtime_version: '1'
+difficulty: Intermediate
+mode: practice
+runner: shacl
+minutes: 15
+objectives:
+- Require every worksFor value of a Person to be a Company instance.
+prerequisites:
+- o09-e01
+statement: 'Require every worksFor value of a Person to be a Company instance.
+
+
+  Use sh:targetClass ex:Person. Validation uses the explicit data graph with no OWL
+  materialization.'
+requirements:
+- Implement the behavior described above for every fixture.
+- Use the exact output variable names or file contract shown in the task.
+- Preserve identity, datatypes, and duplicate rows unless the task explicitly requests
+  a change.
+starter:
+  shapes.ttl: '@prefix ex: <https://example.org/> .
+
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+
+    # Write your model here.
+
+    '
+solution:
+  shapes.ttl: '@prefix ex: <https://example.org/> .
+
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+    ex:PersonShape a sh:NodeShape ; sh:targetClass ex:Person ; sh:property [ sh:path
+    ex:worksFor ; sh:class ex:Company ] .'
+explanation: Select Person focus nodes, follow the stated property path, and constrain
+  its value nodes. Cardinality and value type are independent requirements.
+hints:
+- Start with the entity or output grain requested by the question.
+- Select Person focus nodes, follow the stated property path, and constrain its value
+  nodes. Cardinality and value type are independent requirements.
+- Use the public dataset to trace one result from its inputs. Then consider missing
+  values and repeated matches.
+sources:
+- title: W3C SHACL
+  url: https://www.w3.org/TR/shacl/
+source_review_date: '2026-09-15'
+status: ready
+review_status: authored_pending_runtime_audit
+fixtures:
+- name: Valid sample
+  public: true
+  data: '@prefix ex: <https://example.org/> .
+
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+    ex:ava a ex:Person ; ex:worksFor ex:northstar . ex:northstar a ex:Company .'
+  input:
+    data: '@prefix ex: <https://example.org/> .
+
+      @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+      @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+      @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+      @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+      @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+      ex:ava a ex:Person ; ex:worksFor ex:northstar . ex:northstar a ex:Company .'
+  expected:
+    conforms: true
+  feedback: The shape must accept valid data and reject invalid data, including people
+    with different IRIs.
+- name: Invalid sample
+  public: true
+  data: '@prefix ex: <https://example.org/> .
+
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+    ex:ava a ex:Person ; ex:worksFor "Northstar" .'
+  input:
+    data: '@prefix ex: <https://example.org/> .
+
+      @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+      @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+      @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+      @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+      @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+      ex:ava a ex:Person ; ex:worksFor "Northstar" .'
+  expected:
+    conforms: false
+  feedback: The shape must accept valid data and reject invalid data, including people
+    with different IRIs.
+- name: Valid sample
+  public: false
+  data: '@prefix ex: <https://example.org/> .
+
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+    ex:other a ex:Person ; ex:worksFor ex:northstar . ex:northstar a ex:Company .'
+  input:
+    data: '@prefix ex: <https://example.org/> .
+
+      @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+      @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+      @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+      @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+      @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+      ex:other a ex:Person ; ex:worksFor ex:northstar . ex:northstar a ex:Company
+      .'
+  expected:
+    conforms: true
+  feedback: The shape must accept valid data and reject invalid data, including people
+    with different IRIs.
+- name: Invalid sample
+  public: false
+  data: '@prefix ex: <https://example.org/> .
+
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+    ex:other a ex:Person ; ex:worksFor "Northstar" .'
+  input:
+    data: '@prefix ex: <https://example.org/> .
+
+      @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+      @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+      @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+      @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+      @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+      ex:other a ex:Person ; ex:worksFor "Northstar" .'
+  expected:
+    conforms: false
+  feedback: The shape must accept valid data and reject invalid data, including people
+    with different IRIs.
+execution: {}
+grading:
+  kind: shacl
+questions: []
+wrong_solutions:
+- shapes.ttl: '@prefix ex: <https://example.org/> .
+
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+    '
+variant_group: o09
+rubric:
+- All stated executable requirements pass.
+- Explain why the implementation has the intended meaning.

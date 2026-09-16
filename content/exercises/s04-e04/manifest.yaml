@@ -1,0 +1,273 @@
+id: s04-e04
+title: Count recorded contacts
+module_id: s04
+version: 1.0.0
+dataset_version: '1'
+grader_version: '1'
+runtime_version: '1'
+difficulty: Fundamentals
+mode: practice
+runner: spark
+minutes: 15
+objectives:
+- Return company_id and contacts counting non-null emails.
+prerequisites:
+- s04-e01
+statement: 'Return company_id and contacts counting non-null emails.
+
+
+  The harness provides DataFrames people and companies. Assign your output DataFrame
+  to `result`. Input schemas are available in the Data tab. Output order is not graded.'
+requirements:
+- Implement the behavior described above for every fixture.
+- Use the exact output variable names or file contract shown in the task.
+- Preserve identity, datatypes, and duplicate rows unless the task explicitly requests
+  a change.
+starter:
+  main.py: '# Assign the output DataFrame to result.
+
+    '
+solution:
+  main.py: 'from pyspark.sql import functions as F
+
+    result = people.groupBy("company_id").agg(F.count("email").alias("contacts"))'
+explanation: Use DataFrame or Spark SQL expressions and keep the required output schema.
+  Do not collect the input into driver-side Python lists.
+hints:
+- Start with the entity or output grain requested by the question.
+- Use DataFrame or Spark SQL expressions and keep the required output schema. Do not
+  collect the input into driver-side Python lists.
+- Use the public dataset to trace one result from its inputs. Then consider missing
+  values and repeated matches.
+sources:
+- title: PySpark DataFrame Guide
+  url: https://spark.apache.org/docs/3.5.5/api/python/getting_started/quickstart_df.html
+- title: Spark SQL Reference
+  url: https://spark.apache.org/docs/3.5.5/sql-ref.html
+source_review_date: '2026-09-15'
+status: ready
+review_status: authored_pending_runtime_audit
+fixtures:
+- name: People and companies
+  public: true
+  data: "{\n  \"tables\": {\n    \"people\": {\n      \"schema\": {\n        \"type\"\
+    : \"struct\",\n        \"fields\": [\n          {\n            \"name\": \"name\"\
+    ,\n            \"type\": \"string\",\n            \"nullable\": true,\n      \
+    \      \"metadata\": {}\n          },\n          {\n            \"name\": \"years\"\
+    ,\n            \"type\": \"long\",\n            \"nullable\": true,\n        \
+    \    \"metadata\": {}\n          },\n          {\n            \"name\": \"email\"\
+    ,\n            \"type\": \"string\",\n            \"nullable\": true,\n      \
+    \      \"metadata\": {}\n          },\n          {\n            \"name\": \"company_id\"\
+    ,\n            \"type\": \"long\",\n            \"nullable\": true,\n        \
+    \    \"metadata\": {}\n          }\n        ]\n      },\n      \"rows\": [\n \
+    \       [\n          \"Ava\",\n          4,\n          \"ava@work.example\",\n\
+    \          1\n        ],\n        [\n          \"Ben\",\n          2,\n      \
+    \    null,\n          1\n        ],\n        [\n          \"Cyra\",\n        \
+    \  7,\n          \"cyra@work.example\",\n          2\n        ],\n        [\n\
+    \          \"Dev\",\n          1,\n          null,\n          9\n        ]\n \
+    \     ]\n    },\n    \"companies\": {\n      \"schema\": {\n        \"type\":\
+    \ \"struct\",\n        \"fields\": [\n          {\n            \"name\": \"company_id\"\
+    ,\n            \"type\": \"long\",\n            \"nullable\": true,\n        \
+    \    \"metadata\": {}\n          },\n          {\n            \"name\": \"company_name\"\
+    ,\n            \"type\": \"string\",\n            \"nullable\": true,\n      \
+    \      \"metadata\": {}\n          }\n        ]\n      },\n      \"rows\": [\n\
+    \        [\n          1,\n          \"Northstar\"\n        ],\n        [\n   \
+    \       2,\n          \"Orbit\"\n        ]\n      ]\n    }\n  }\n}"
+  format: json
+  input:
+    tables:
+      people:
+        schema: &id001
+          type: struct
+          fields:
+          - name: name
+            type: string
+            nullable: true
+            metadata: {}
+          - name: years
+            type: long
+            nullable: true
+            metadata: {}
+          - name: email
+            type: string
+            nullable: true
+            metadata: {}
+          - name: company_id
+            type: long
+            nullable: true
+            metadata: {}
+        rows:
+        - - Ava
+          - 4
+          - ava@work.example
+          - 1
+        - - Ben
+          - 2
+          - null
+          - 1
+        - - Cyra
+          - 7
+          - cyra@work.example
+          - 2
+        - - Dev
+          - 1
+          - null
+          - 9
+      companies:
+        schema: &id002
+          type: struct
+          fields:
+          - name: company_id
+            type: long
+            nullable: true
+            metadata: {}
+          - name: company_name
+            type: string
+            nullable: true
+            metadata: {}
+        rows: &id003
+        - - 1
+          - Northstar
+        - - 2
+          - Orbit
+  expected:
+    schema:
+      type: struct
+      fields:
+      - name: company_id
+        type: long
+        nullable: true
+        metadata: {}
+      - name: contacts
+        type: long
+        nullable: false
+        metadata: {}
+    rows:
+    - company_id: 1
+      contacts: 1
+    - company_id: 2
+      contacts: 1
+    - company_id: 9
+      contacts: 0
+  feedback: Check output schema, null handling, duplicate rows, and unmatched identifiers.
+- name: Edge cases
+  public: false
+  data: "{\n  \"tables\": {\n    \"people\": {\n      \"schema\": {\n        \"type\"\
+    : \"struct\",\n        \"fields\": [\n          {\n            \"name\": \"name\"\
+    ,\n            \"type\": \"string\",\n            \"nullable\": true,\n      \
+    \      \"metadata\": {}\n          },\n          {\n            \"name\": \"years\"\
+    ,\n            \"type\": \"long\",\n            \"nullable\": true,\n        \
+    \    \"metadata\": {}\n          },\n          {\n            \"name\": \"email\"\
+    ,\n            \"type\": \"string\",\n            \"nullable\": true,\n      \
+    \      \"metadata\": {}\n          },\n          {\n            \"name\": \"company_id\"\
+    ,\n            \"type\": \"long\",\n            \"nullable\": true,\n        \
+    \    \"metadata\": {}\n          }\n        ]\n      },\n      \"rows\": [\n \
+    \       [\n          \" Ella \",\n          4,\n          null,\n          1\n\
+    \        ],\n        [\n          \"Farid\",\n          null,\n          \"f@x\"\
+    ,\n          null\n        ],\n        [\n          \" Ella \",\n          4,\n\
+    \          null,\n          1\n        ]\n      ]\n    },\n    \"companies\":\
+    \ {\n      \"schema\": {\n        \"type\": \"struct\",\n        \"fields\": [\n\
+    \          {\n            \"name\": \"company_id\",\n            \"type\": \"\
+    long\",\n            \"nullable\": true,\n            \"metadata\": {}\n     \
+    \     },\n          {\n            \"name\": \"company_name\",\n            \"\
+    type\": \"string\",\n            \"nullable\": true,\n            \"metadata\"\
+    : {}\n          }\n        ]\n      },\n      \"rows\": [\n        [\n       \
+    \   1,\n          \"Northstar\"\n        ],\n        [\n          1,\n       \
+    \   \"Branch\"\n        ]\n      ]\n    }\n  }\n}"
+  format: json
+  input:
+    tables:
+      people:
+        schema: *id001
+        rows:
+        - - ' Ella '
+          - 4
+          - null
+          - 1
+        - - Farid
+          - null
+          - f@x
+          - null
+        - - ' Ella '
+          - 4
+          - null
+          - 1
+      companies:
+        schema: *id002
+        rows:
+        - - 1
+          - Northstar
+        - - 1
+          - Branch
+  expected:
+    schema:
+      type: struct
+      fields:
+      - name: company_id
+        type: long
+        nullable: true
+        metadata: {}
+      - name: contacts
+        type: long
+        nullable: false
+        metadata: {}
+    rows:
+    - company_id: 1
+      contacts: 0
+    - company_id: null
+      contacts: 1
+  feedback: Check output schema, null handling, duplicate rows, and unmatched identifiers.
+- name: Edge cases
+  public: false
+  data: "{\n  \"tables\": {\n    \"people\": {\n      \"schema\": {\n        \"type\"\
+    : \"struct\",\n        \"fields\": [\n          {\n            \"name\": \"name\"\
+    ,\n            \"type\": \"string\",\n            \"nullable\": true,\n      \
+    \      \"metadata\": {}\n          },\n          {\n            \"name\": \"years\"\
+    ,\n            \"type\": \"long\",\n            \"nullable\": true,\n        \
+    \    \"metadata\": {}\n          },\n          {\n            \"name\": \"email\"\
+    ,\n            \"type\": \"string\",\n            \"nullable\": true,\n      \
+    \      \"metadata\": {}\n          },\n          {\n            \"name\": \"company_id\"\
+    ,\n            \"type\": \"long\",\n            \"nullable\": true,\n        \
+    \    \"metadata\": {}\n          }\n        ]\n      },\n      \"rows\": []\n\
+    \    },\n    \"companies\": {\n      \"schema\": {\n        \"type\": \"struct\"\
+    ,\n        \"fields\": [\n          {\n            \"name\": \"company_id\",\n\
+    \            \"type\": \"long\",\n            \"nullable\": true,\n          \
+    \  \"metadata\": {}\n          },\n          {\n            \"name\": \"company_name\"\
+    ,\n            \"type\": \"string\",\n            \"nullable\": true,\n      \
+    \      \"metadata\": {}\n          }\n        ]\n      },\n      \"rows\": [\n\
+    \        [\n          1,\n          \"Northstar\"\n        ],\n        [\n   \
+    \       2,\n          \"Orbit\"\n        ]\n      ]\n    }\n  }\n}"
+  format: json
+  input:
+    tables:
+      people:
+        schema: *id001
+        rows: []
+      companies:
+        schema: *id002
+        rows: *id003
+  expected:
+    schema:
+      type: struct
+      fields:
+      - name: company_id
+        type: long
+        nullable: true
+        metadata: {}
+      - name: contacts
+        type: long
+        nullable: false
+        metadata: {}
+    rows: []
+  feedback: Check output schema, null handling, duplicate rows, and unmatched identifiers.
+execution: {}
+grading:
+  kind: spark
+  tolerance: 1.0e-09
+questions: []
+wrong_solutions:
+- main.py: result = people.limit(0)
+variant_group: s04
+rubric:
+- All stated executable requirements pass.
+- Explain why the implementation has the intended meaning.

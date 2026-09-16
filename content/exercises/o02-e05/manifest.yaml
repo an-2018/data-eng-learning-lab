@@ -1,0 +1,138 @@
+id: o02-e05
+title: Chain a class hierarchy
+module_id: o02
+version: 1.0.0
+dataset_version: '1'
+grader_version: '1'
+runtime_version: '1'
+difficulty: Fundamentals
+mode: practice
+runner: rdf
+minutes: 15
+objectives:
+- Build SeniorEngineer → Engineer → Person subclass relationships.
+prerequisites:
+- o02-e01
+statement: 'Build SeniorEngineer → Engineer → Person subclass relationships.
+
+
+  Do not assert the inferred facts directly: supply vocabulary declarations. RDFS
+  inference is enabled.'
+requirements:
+- Implement the behavior described above for every fixture.
+- Use the exact output variable names or file contract shown in the task.
+- Preserve identity, datatypes, and duplicate rows unless the task explicitly requests
+  a change.
+starter:
+  ontology.ttl: '@prefix ex: <https://example.org/> .
+
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+
+    # Write your model here.
+
+    '
+solution:
+  ontology.ttl: '@prefix ex: <https://example.org/> .
+
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+    ex:SeniorEngineer rdfs:subClassOf ex:Engineer . ex:Engineer rdfs:subClassOf ex:Person
+    .'
+explanation: Domain and range infer endpoint types. Subclass and subproperty implications
+  only run from specialized to general.
+hints:
+- Start with the entity or output grain requested by the question.
+- Domain and range infer endpoint types. Subclass and subproperty implications only
+  run from specialized to general.
+- Use the public dataset to trace one result from its inputs. Then consider missing
+  values and repeated matches.
+sources:
+- title: W3C RDF Schema 1.1
+  url: https://www.w3.org/TR/rdf-schema/
+- title: W3C RDF 1.1 Primer
+  url: https://www.w3.org/TR/rdf11-primer/
+source_review_date: '2026-09-15'
+status: ready
+review_status: authored_pending_runtime_audit
+fixtures:
+- name: Inference sample
+  public: true
+  data: '@prefix ex: <https://example.org/> .
+
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+    ex:ava a ex:SeniorEngineer .'
+  input:
+    data: '@prefix ex: <https://example.org/> .
+
+      @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+      @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+      @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+      @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+      @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+      ex:ava a ex:SeniorEngineer .'
+  expected:
+    boolean: true
+  feedback: Check the direction of the subclass/subproperty or endpoint declaration.
+execution:
+  query: 'PREFIX ex: <https://example.org/>
+
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+    ASK { ex:ava a ex:Person }'
+  inference: rdfs
+grading:
+  kind: sparql
+questions: []
+wrong_solutions:
+- ontology.ttl: '@prefix ex: <https://example.org/> .
+
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+    '
+variant_group: o02
+rubric:
+- All stated executable requirements pass.
+- Explain why the implementation has the intended meaning.

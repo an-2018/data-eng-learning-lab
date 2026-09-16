@@ -1,0 +1,208 @@
+id: o13-e03
+title: Quarantine missing identifiers
+module_id: o13
+version: 1.0.0
+dataset_version: '1'
+grader_version: '1'
+runtime_version: '1'
+difficulty: Advanced
+mode: practice
+runner: ingestion
+minutes: 15
+objectives:
+- 'Implement this SPARQL Update transformation: quarantine missing identifiers.'
+prerequisites:
+- o13-e01
+statement: 'Implement this SPARQL Update transformation: quarantine missing identifiers.
+
+
+  The verification query is:
+
+  ```sparql
+
+  PREFIX ex: <https://example.org/>
+
+  PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+  PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+  PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+  SELECT ?s ?reason WHERE { GRAPH ex:quarantine { ?s ex:reason ?reason } }
+
+  ```
+
+
+  Add reason missing employeeId in quarantine for each Person without an identifier.
+  The runner repeats the transaction; retries must not duplicate facts.'
+requirements:
+- Implement the behavior described above for every fixture.
+- Use the exact output variable names or file contract shown in the task.
+- Preserve identity, datatypes, and duplicate rows unless the task explicitly requests
+  a change.
+starter:
+  update.rq: 'PREFIX ex: <https://example.org/>
+
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+
+    # Write a complete query here.
+
+    '
+solution:
+  update.rq: 'PREFIX ex: <https://example.org/>
+
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+    INSERT { GRAPH ex:quarantine { ?s ex:reason "missing employeeId" } } WHERE { ?s
+    a ex:Person FILTER NOT EXISTS { ?s ex:employeeId ?id } }'
+explanation: Use explicit named graphs and stable subject identifiers. The transaction
+  controls commit versus abort; your update must be safe when repeated.
+hints:
+- Start with the entity or output grain requested by the question.
+- Use explicit named graphs and stable subject identifiers. The transaction controls
+  commit versus abort; your update must be safe when repeated.
+- Use the public dataset to trace one result from its inputs. Then consider missing
+  values and repeated matches.
+sources:
+- title: W3C SPARQL 1.1 Update
+  url: https://www.w3.org/TR/sparql11-update/
+- title: W3C PROV-O
+  url: https://www.w3.org/TR/prov-o/
+- title: Apache Jena Transactions
+  url: https://jena.apache.org/documentation/txn/
+source_review_date: '2026-09-15'
+status: ready
+review_status: authored_pending_runtime_audit
+fixtures:
+- name: Snapshot sample
+  public: true
+  data: '@prefix ex: <https://example.org/> .
+
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+    ex:ava a ex:Person ; ex:rawName "Ava" ; ex:employeeId "E1" . ex:ben a ex:Person
+    ; ex:rawName "Ben" .'
+  input:
+    data: '@prefix ex: <https://example.org/> .
+
+      @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+      @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+      @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+      @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+      @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+      ex:ava a ex:Person ; ex:rawName "Ava" ; ex:employeeId "E1" . ex:ben a ex:Person
+      ; ex:rawName "Ben" .'
+    repeats: 2
+    abortFirst: false
+  expected:
+    results:
+      bindings:
+      - s:
+          type: uri
+          value: https://example.org/ben
+        reason:
+          type: literal
+          value: missing employeeId
+    head:
+      vars:
+      - s
+      - reason
+  feedback: Check named-graph scope, stable identities, retry behavior, and the requested
+    output facts.
+- name: Retry after rollback
+  public: false
+  data: '@prefix ex: <https://example.org/> .
+
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+    ex:cyra a ex:Person ; ex:rawName "Cyra" ; ex:employeeId "E3" . ex:dev a ex:Person
+    .'
+  input:
+    data: '@prefix ex: <https://example.org/> .
+
+      @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+      @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+      @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+      @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+      @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+      ex:cyra a ex:Person ; ex:rawName "Cyra" ; ex:employeeId "E3" . ex:dev a ex:Person
+      .'
+    repeats: 2
+    abortFirst: false
+  expected:
+    results:
+      bindings:
+      - s:
+          type: uri
+          value: https://example.org/dev
+        reason:
+          type: literal
+          value: missing employeeId
+    head:
+      vars:
+      - s
+      - reason
+  feedback: Check named-graph scope, stable identities, retry behavior, and the requested
+    output facts.
+execution:
+  query: 'PREFIX ex: <https://example.org/>
+
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+    SELECT ?s ?reason WHERE { GRAPH ex:quarantine { ?s ex:reason ?reason } }'
+grading:
+  kind: sparql
+questions: []
+wrong_solutions:
+- update.rq: 'PREFIX ex: <https://example.org/>
+
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+    SELECT ?wrong WHERE { FILTER(false) }'
+variant_group: o13
+rubric:
+- All stated executable requirements pass.
+- Explain why the implementation has the intended meaning.

@@ -1,0 +1,167 @@
+id: o07-e01
+title: Preserve subclass direction
+module_id: o07
+version: 1.0.0
+dataset_version: '1'
+grader_version: '1'
+runtime_version: '1'
+difficulty: Intermediate
+mode: guided
+runner: owl
+minutes: 12
+objectives:
+- Make Employee a subclass of Person.
+prerequisites: []
+statement: 'Make Employee a subclass of Person.
+
+
+  The fixture supplies entity declarations. Do not replace reasoning with explicit
+  answers. Work within OWL 2 DL.'
+requirements:
+- Implement the behavior described above for every fixture.
+- Use the exact output variable names or file contract shown in the task.
+- Preserve identity, datatypes, and duplicate rows unless the task explicitly requests
+  a change.
+starter:
+  ontology.ttl: '@prefix ex: <https://example.org/> .
+
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+
+    # Write your model here.
+
+    '
+solution:
+  ontology.ttl: '@prefix ex: <https://example.org/> .
+
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+    ex:Person a owl:Class . ex:Employee a owl:Class . ex:Company a owl:Class . ex:Engineer
+    a owl:Class . ex:Impossible a owl:Class . ex:worksFor a owl:ObjectProperty . ex:employs
+    a owl:ObjectProperty . ex:ava a owl:NamedIndividual . ex:northstar a owl:NamedIndividual
+    .
+
+    ex:Employee rdfs:subClassOf ex:Person .'
+explanation: Subclass axioms state necessary conditions. Equivalence states both directions.
+  Missing facts and unsatisfiable classes must be distinguished from inconsistent
+  ontologies.
+hints:
+- Start with the entity or output grain requested by the question.
+- Subclass axioms state necessary conditions. Equivalence states both directions.
+  Missing facts and unsatisfiable classes must be distinguished from inconsistent
+  ontologies.
+- Use the public dataset to trace one result from its inputs. Then consider missing
+  values and repeated matches.
+sources:
+- title: W3C OWL 2 Primer
+  url: https://www.w3.org/TR/owl2-primer/
+source_review_date: '2026-09-15'
+status: ready
+review_status: authored_pending_runtime_audit
+fixtures:
+- name: Reasoning fixture
+  public: true
+  data: '@prefix ex: <https://example.org/> .
+
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+    ex:Person a owl:Class . ex:Employee a owl:Class . ex:Company a owl:Class . ex:Engineer
+    a owl:Class . ex:Impossible a owl:Class . ex:worksFor a owl:ObjectProperty . ex:employs
+    a owl:ObjectProperty . ex:ava a owl:NamedIndividual . ex:northstar a owl:NamedIndividual
+    .
+
+    ex:ava a ex:Employee .'
+  input:
+    data: '@prefix ex: <https://example.org/> .
+
+      @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+      @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+      @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+      @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+      @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+      ex:Person a owl:Class . ex:Employee a owl:Class . ex:Company a owl:Class . ex:Engineer
+      a owl:Class . ex:Impossible a owl:Class . ex:worksFor a owl:ObjectProperty .
+      ex:employs a owl:ObjectProperty . ex:ava a owl:NamedIndividual . ex:northstar
+      a owl:NamedIndividual .
+
+      ex:ava a ex:Employee .'
+    checks:
+    - kind: type
+      id: person
+      class: https://example.org/Person
+      individual: https://example.org/ava
+    checkAxioms: '@prefix ex: <https://example.org/> .
+
+      @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+      @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+      @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+      @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+      @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+      ex:Person a owl:Class . ex:Employee a owl:Class . ex:Company a owl:Class . ex:Engineer
+      a owl:Class . ex:Impossible a owl:Class . ex:worksFor a owl:ObjectProperty .
+      ex:employs a owl:ObjectProperty . ex:ava a owl:NamedIndividual . ex:northstar
+      a owl:NamedIndividual .
+
+      ex:Employee rdfs:subClassOf ex:Person .'
+  expected:
+    consistent: true
+    requiredAxioms: true
+    person: true
+  feedback: Check consistency first, then the direction and strength of the requested
+    entailment.
+execution: {}
+grading:
+  kind: owl
+questions: []
+wrong_solutions:
+- ontology.ttl: '@prefix ex: <https://example.org/> .
+
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+    '
+variant_group: o07
+rubric:
+- All stated executable requirements pass.
+- Explain why the implementation has the intended meaning.

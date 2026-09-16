@@ -1,0 +1,912 @@
+schema_version: '1'
+tracks:
+- id: ontology
+  title: Ontology engineering
+  description: Model meaning, query knowledge, and build reliable graphs. From RDF
+    fundamentals to production systems.
+  status: active
+  modules:
+  - id: o01
+    number: 1
+    title: RDF foundations
+    level: Fundamentals
+    description: Facts as triples · IRIs, literals, and datatypes · Blank nodes and
+      reusable identity · Turtle and RDF datasets
+    lessons:
+    - id: o01-l1
+      title: Facts as triples
+      minutes: 8
+    - id: o01-l2
+      title: IRIs, literals, and datatypes
+      minutes: 8
+    - id: o01-l3
+      title: Blank nodes and reusable identity
+      minutes: 8
+    - id: o01-l4
+      title: Turtle and RDF datasets
+      minutes: 8
+    sources:
+    - &id001
+      title: W3C RDF 1.1 Primer
+      url: https://www.w3.org/TR/rdf11-primer/
+    status: authored
+    prerequisites: []
+    glossary:
+    - term: Facts as triples
+      definition: 'A triple describes one relationship: a subject resource, a predicate
+        IRI, and an object resource or literal.'
+    - term: IRIs, literals, and datatypes
+      definition: IRIs identify resources; literals carry values.
+    - term: Blank nodes and reusable identity
+      definition: A blank node says that a resource exists without assigning it a
+        global IRI.
+    - term: Turtle and RDF datasets
+      definition: Turtle abbreviates triples using prefixes, semicolons, and commas.
+  - id: o02
+    number: 2
+    title: RDFS and vocabulary design
+    level: Fundamentals
+    description: Classes and instances · Domain and range infer types · Property hierarchies
+      · Names, labels, and documentation
+    lessons:
+    - id: o02-l1
+      title: Classes and instances
+      minutes: 8
+    - id: o02-l2
+      title: Domain and range infer types
+      minutes: 8
+    - id: o02-l3
+      title: Property hierarchies
+      minutes: 8
+    - id: o02-l4
+      title: Names, labels, and documentation
+      minutes: 8
+    sources:
+    - title: W3C RDF Schema 1.1
+      url: https://www.w3.org/TR/rdf-schema/
+    - *id001
+    status: authored
+    prerequisites:
+    - o01
+    glossary:
+    - term: Classes and instances
+      definition: A class groups resources.
+    - term: Domain and range infer types
+      definition: RDFS domain and range are inference rules.
+    - term: Property hierarchies
+      definition: A subproperty lets a specialized relationship imply a general one.
+    - term: Names, labels, and documentation
+      definition: An IRI is an identifier, while rdfs:label provides a human-facing
+        name.
+  - id: o03
+    number: 3
+    title: SPARQL fundamentals
+    level: Fundamentals
+    description: Write a complete graph pattern · Join through an association · Filter
+      values deliberately · Bind expressions and constrain inputs
+    lessons:
+    - id: o03-l1
+      title: Write a complete graph pattern
+      minutes: 8
+    - id: o03-l2
+      title: Join through an association
+      minutes: 8
+    - id: o03-l3
+      title: Filter values deliberately
+      minutes: 8
+    - id: o03-l4
+      title: Bind expressions and constrain inputs
+      minutes: 8
+    sources:
+    - &id002
+      title: W3C SPARQL 1.1 Query
+      url: https://www.w3.org/TR/sparql11-query/
+    status: authored
+    prerequisites:
+    - o02
+    glossary:
+    - term: Write a complete graph pattern
+      definition: A basic graph pattern joins triple patterns through shared variables.
+    - term: Join through an association
+      definition: An Assignment can connect a Person and Project while carrying its
+        own role and allocation.
+    - term: Filter values deliberately
+      definition: FILTER keeps solution mappings for which an expression evaluates
+        true.
+    - term: Bind expressions and constrain inputs
+      definition: BIND names an expression result.
+  - id: o04
+    number: 4
+    title: SPARQL composition
+    level: Fundamentals
+    description: Optional data without losing people · Union expresses alternatives
+      · Absence and correlated existence · Duplicates are part of the result
+    lessons:
+    - id: o04-l1
+      title: Optional data without losing people
+      minutes: 8
+    - id: o04-l2
+      title: Union expresses alternatives
+      minutes: 8
+    - id: o04-l3
+      title: Absence and correlated existence
+      minutes: 8
+    - id: o04-l4
+      title: Duplicates are part of the result
+      minutes: 8
+    sources:
+    - *id002
+    status: authored
+    prerequisites:
+    - o03
+    glossary:
+    - term: Optional data without losing people
+      definition: OPTIONAL extends existing mappings when a match exists and preserves
+        them when no match exists.
+    - term: Union expresses alternatives
+      definition: UNION evaluates alternative graph patterns and combines their solution
+        mappings.
+    - term: Absence and correlated existence
+      definition: FILTER NOT EXISTS tests whether a pattern has a match under current
+        bindings.
+    - term: Duplicates are part of the result
+      definition: SPARQL SELECT produces a multiset of solution mappings.
+  - id: o05
+    number: 5
+    title: Advanced SPARQL
+    level: Intermediate
+    description: Aggregation and subqueries · Paths and reachability · Named graphs
+      and graph construction · Updates and dataset state
+    lessons:
+    - id: o05-l1
+      title: Aggregation and subqueries
+      minutes: 8
+    - id: o05-l2
+      title: Paths and reachability
+      minutes: 8
+    - id: o05-l3
+      title: Named graphs and graph construction
+      minutes: 8
+    - id: o05-l4
+      title: Updates and dataset state
+      minutes: 8
+    sources:
+    - *id002
+    - &id006
+      title: W3C SPARQL 1.1 Update
+      url: https://www.w3.org/TR/sparql11-update/
+    status: authored
+    prerequisites:
+    - o04
+    glossary:
+    - term: Aggregation and subqueries
+      definition: GROUP BY groups mappings before aggregates are computed.
+    - term: Paths and reachability
+      definition: Property paths traverse relationships.
+    - term: Named graphs and graph construction
+      definition: GRAPH chooses a named graph in a dataset.
+    - term: Updates and dataset state
+      definition: INSERT DATA adds explicit triples; DELETE/INSERT WHERE transforms
+        matches.
+  - id: o06
+    number: 6
+    title: Modeling method
+    level: Intermediate
+    description: Start with competency questions · Identity and lifecycle · Associations
+      with attributes · Taxonomy versus entity model
+    lessons:
+    - id: o06-l1
+      title: Start with competency questions
+      minutes: 8
+    - id: o06-l2
+      title: Identity and lifecycle
+      minutes: 8
+    - id: o06-l3
+      title: Associations with attributes
+      minutes: 8
+    - id: o06-l4
+      title: Taxonomy versus entity model
+      minutes: 8
+    sources:
+    - *id001
+    - &id003
+      title: W3C OWL 2 Primer
+      url: https://www.w3.org/TR/owl2-primer/
+    - &id005
+      title: W3C SKOS Reference
+      url: https://www.w3.org/TR/skos-reference/
+    status: authored
+    prerequisites:
+    - o05
+    glossary:
+    - term: Start with competency questions
+      definition: Competency questions define what a graph must answer.
+    - term: Identity and lifecycle
+      definition: Make something a first-class resource when it must be identified,
+        linked, reused, tracked through changes, or given its own evidence.
+    - term: Associations with attributes
+      definition: Use an association resource when a relationship has attributes such
+        as dates, role, price, or allocation.
+    - term: Taxonomy versus entity model
+      definition: A category can be a reusable concept in a controlled vocabulary.
+  - id: o07
+    number: 7
+    title: OWL foundations
+    level: Intermediate
+    description: Necessary and sufficient conditions · Open-world reasoning · Disjointness
+      and consistency · Properties have logical characteristics
+    lessons:
+    - id: o07-l1
+      title: Necessary and sufficient conditions
+      minutes: 8
+    - id: o07-l2
+      title: Open-world reasoning
+      minutes: 8
+    - id: o07-l3
+      title: Disjointness and consistency
+      minutes: 8
+    - id: o07-l4
+      title: Properties have logical characteristics
+      minutes: 8
+    sources:
+    - *id003
+    status: authored
+    prerequisites:
+    - o06
+    glossary:
+    - term: Necessary and sufficient conditions
+      definition: 'Subclassing states a necessary condition: membership in a subclass
+        entails membership in its superclass.'
+    - term: Open-world reasoning
+      definition: OWL reasons about what follows from asserted axioms, allowing additional
+        unrecorded facts.
+    - term: Disjointness and consistency
+      definition: Disjoint classes cannot share an individual in a consistent ontology.
+    - term: Properties have logical characteristics
+      definition: An inverse property reverses a relationship; a transitive property
+        carries a relationship across a chain; symmetry entails the reverse edge.
+  - id: o08
+    number: 8
+    title: OWL restrictions and reasoning
+    level: Intermediate
+    description: Existential and universal restrictions · Cardinality and identity
+      · Diagnose unsatisfiable classes · Profiles and reasoning contracts
+    lessons:
+    - id: o08-l1
+      title: Existential and universal restrictions
+      minutes: 8
+    - id: o08-l2
+      title: Cardinality and identity
+      minutes: 8
+    - id: o08-l3
+      title: Diagnose unsatisfiable classes
+      minutes: 8
+    - id: o08-l4
+      title: Profiles and reasoning contracts
+      minutes: 8
+    sources:
+    - *id003
+    status: authored
+    prerequisites:
+    - o07
+    glossary:
+    - term: Existential and universal restrictions
+      definition: An existential restriction requires some qualifying value in every
+        model, but the value need not have an explicit name or triple in the input.
+    - term: Cardinality and identity
+      definition: Qualified cardinality counts values belonging to a specified class.
+    - term: Diagnose unsatisfiable classes
+      definition: A class that inherits from two disjoint classes cannot have members.
+    - term: Profiles and reasoning contracts
+      definition: OWL profiles restrict language features to support different computational
+        tradeoffs.
+  - id: o09
+    number: 9
+    title: SHACL foundations
+    level: Validation
+    description: Targets and focus nodes · Paths and cardinality · Class and datatype
+      constraints · Read validation reports
+    lessons:
+    - id: o09-l1
+      title: Targets and focus nodes
+      minutes: 8
+    - id: o09-l2
+      title: Paths and cardinality
+      minutes: 8
+    - id: o09-l3
+      title: Class and datatype constraints
+      minutes: 8
+    - id: o09-l4
+      title: Read validation reports
+      minutes: 8
+    sources:
+    - &id004
+      title: W3C SHACL
+      url: https://www.w3.org/TR/shacl/
+    status: authored
+    prerequisites:
+    - o08
+    glossary:
+    - term: Targets and focus nodes
+      definition: A NodeShape defines constraints for selected focus nodes.
+    - term: Paths and cardinality
+      definition: A property shape follows sh:path from each focus node, then applies
+        minCount and maxCount to its value nodes.
+    - term: Class and datatype constraints
+      definition: Use sh:class when values should be resources of a class and sh:datatype
+        when they should be typed literals.
+    - term: Read validation reports
+      definition: A validation result identifies a focus node, a constraint component,
+        and often a path and offending value.
+  - id: o10
+    number: 10
+    title: Advanced SHACL
+    level: Validation
+    description: Nested shapes and paths · Logical combinations · Closed shapes and
+      extension · SPARQL constraints and scope
+    lessons:
+    - id: o10-l1
+      title: Nested shapes and paths
+      minutes: 8
+    - id: o10-l2
+      title: Logical combinations
+      minutes: 8
+    - id: o10-l3
+      title: Closed shapes and extension
+      minutes: 8
+    - id: o10-l4
+      title: SPARQL constraints and scope
+      minutes: 8
+    sources:
+    - *id004
+    status: authored
+    prerequisites:
+    - o09
+    glossary:
+    - term: Nested shapes and paths
+      definition: sh:node validates a value node against another shape.
+    - term: Logical combinations
+      definition: sh:or requires at least one alternative; sh:and requires every alternative;
+        sh:xone requires exactly one.
+    - term: Closed shapes and extension
+      definition: A closed shape limits allowed outgoing properties, subject to explicitly
+        ignored predicates.
+    - term: SPARQL constraints and scope
+      definition: A SHACL SPARQL constraint reports violating solutions, typically
+        involving $this.
+  - id: o11
+    number: 11
+    title: Reuse and ontology lifecycle
+    level: Integration
+    description: Choose what to reuse · Concept schemes and labels · Mappings have
+      different strength · Version and deprecate deliberately
+    lessons:
+    - id: o11-l1
+      title: Choose what to reuse
+      minutes: 8
+    - id: o11-l2
+      title: Concept schemes and labels
+      minutes: 8
+    - id: o11-l3
+      title: Mappings have different strength
+      minutes: 8
+    - id: o11-l4
+      title: Version and deprecate deliberately
+      minutes: 8
+    sources:
+    - *id005
+    - *id003
+    status: authored
+    prerequisites:
+    - o10
+    glossary:
+    - term: Choose what to reuse
+      definition: Evaluate a vocabulary by semantic fit, identifier stability, governance,
+        documentation, and maintenance.
+    - term: Concept schemes and labels
+      definition: SKOS separates concepts, labels, concept schemes, and semantic relationships.
+    - term: Mappings have different strength
+      definition: An OWL equivalence statement is a logical commitment, not a fuzzy
+        match score.
+    - term: Version and deprecate deliberately
+      definition: Keep ontology identity separate from version identity.
+  - id: o12
+    number: 12
+    title: Semantic integration and entity resolution
+    level: Integration
+    description: Normalize without erasing evidence · Deterministic matching · Confidence
+      and review · Identity assertions and provenance
+    lessons:
+    - id: o12-l1
+      title: Normalize without erasing evidence
+      minutes: 8
+    - id: o12-l2
+      title: Deterministic matching
+      minutes: 8
+    - id: o12-l3
+      title: Confidence and review
+      minutes: 8
+    - id: o12-l4
+      title: Identity assertions and provenance
+      minutes: 8
+    sources:
+    - &id007
+      title: W3C PROV-O
+      url: https://www.w3.org/TR/prov-o/
+    - *id003
+    status: authored
+    prerequisites:
+    - o11
+    glossary:
+    - term: Normalize without erasing evidence
+      definition: Normalize fields for comparison but preserve the original source
+        values.
+    - term: Deterministic matching
+      definition: A deterministic rule matches records using explicit conditions.
+    - term: Confidence and review
+      definition: Separate candidate generation, scoring, and decision thresholds.
+    - term: Identity assertions and provenance
+      definition: Preserve source records even when a canonical entity is created.
+  - id: o13
+    number: 13
+    title: Ingestion and publication
+    level: Production
+    description: Snapshots and mapping versions · Stage and validate · Idempotent
+      transformations · Publish atomically
+    lessons:
+    - id: o13-l1
+      title: Snapshots and mapping versions
+      minutes: 8
+    - id: o13-l2
+      title: Stage and validate
+      minutes: 8
+    - id: o13-l3
+      title: Idempotent transformations
+      minutes: 8
+    - id: o13-l4
+      title: Publish atomically
+      minutes: 8
+    sources:
+    - *id006
+    - *id007
+    - &id008
+      title: Apache Jena Transactions
+      url: https://jena.apache.org/documentation/txn/
+    status: authored
+    prerequisites:
+    - o12
+    glossary:
+    - term: Snapshots and mapping versions
+      definition: Treat a source snapshot and mapping version as inputs to a reproducible
+        transformation.
+    - term: Stage and validate
+      definition: Load into a staging graph, validate its completeness and constraints,
+        then publish only acceptable data.
+    - term: Idempotent transformations
+      definition: A retry should not create a second representation of the same business
+        fact.
+    - term: Publish atomically
+      definition: Within one transactional dataset, readers should see either the
+        old published graph or the complete new graph.
+  - id: o14
+    number: 14
+    title: Triplestore operations
+    level: Production
+    description: Bulk loading and serving · Transactions and concurrent readers ·
+      Retries and ambiguous outcomes · Backup and restore evidence
+    lessons:
+    - id: o14-l1
+      title: Bulk loading and serving
+      minutes: 8
+    - id: o14-l2
+      title: Transactions and concurrent readers
+      minutes: 8
+    - id: o14-l3
+      title: Retries and ambiguous outcomes
+      minutes: 8
+    - id: o14-l4
+      title: Backup and restore evidence
+      minutes: 8
+    sources:
+    - title: Apache Jena TDB2
+      url: https://jena.apache.org/documentation/tdb2/
+    - *id008
+    status: authored
+    prerequisites:
+    - o13
+    glossary:
+    - term: Bulk loading and serving
+      definition: Bulk loaders optimize ingestion under documented operating conditions.
+    - term: Transactions and concurrent readers
+      definition: A transaction defines a consistency boundary for a sequence of operations.
+    - term: Retries and ambiguous outcomes
+      definition: A timeout can occur after a server commits but before the client
+        receives confirmation.
+    - term: Backup and restore evidence
+      definition: A recovery procedure is tested by restoring and checking data, not
+        by producing a backup file.
+  - id: o15
+    number: 15
+    title: Query performance
+    level: Production
+    description: Selectivity and cardinality · Avoid accidental Cartesian products
+      · Scope optional and path work · Measure a controlled experiment
+    lessons:
+    - id: o15-l1
+      title: Selectivity and cardinality
+      minutes: 8
+    - id: o15-l2
+      title: Avoid accidental Cartesian products
+      minutes: 8
+    - id: o15-l3
+      title: Scope optional and path work
+      minutes: 8
+    - id: o15-l4
+      title: Measure a controlled experiment
+      minutes: 8
+    sources:
+    - *id002
+    - title: Jena Query Explanation
+      url: https://jena.apache.org/documentation/query/explain.html
+    status: authored
+    prerequisites:
+    - o14
+    glossary:
+    - term: Selectivity and cardinality
+      definition: Selective patterns reduce candidate mappings.
+    - term: Avoid accidental Cartesian products
+      definition: Patterns without shared variables combine independently, multiplying
+        solutions.
+    - term: Scope optional and path work
+      definition: Bind endpoints and choose graph scope before exploring expensive
+        paths when semantics allow.
+    - term: Measure a controlled experiment
+      definition: Record engine version, dataset, statistics, cache state, query plan,
+        and repeated timings.
+  - id: o16
+    number: 16
+    title: Governance and release
+    level: Production
+    description: Compatibility is behavioral · Migration and provenance · Observe
+      meaning and operations · Release with explicit ownership
+    lessons:
+    - id: o16-l1
+      title: Compatibility is behavioral
+      minutes: 8
+    - id: o16-l2
+      title: Migration and provenance
+      minutes: 8
+    - id: o16-l3
+      title: Observe meaning and operations
+      minutes: 8
+    - id: o16-l4
+      title: Release with explicit ownership
+      minutes: 8
+    sources:
+    - *id007
+    - *id003
+    - *id004
+    status: authored
+    prerequisites:
+    - o15
+    glossary:
+    - term: Compatibility is behavioral
+      definition: An ontology release can change query results, inferred types, or
+        validation outcomes.
+    - term: Migration and provenance
+      definition: A migration transforms data under a named mapping version.
+    - term: Observe meaning and operations
+      definition: Monitor ingestion volumes, quarantine reasons, missing required
+        relationships, consistency, and query errors alongside CPU and memory.
+    - term: Release with explicit ownership
+      definition: Record who owns vocabulary changes, mapping decisions, review queues,
+        and recovery.
+- id: spark
+  title: Apache Spark
+  description: Turn data into understanding with PySpark and Spark SQL. Build transformations
+    that you can explain.
+  status: active
+  modules:
+  - id: s01
+    number: 1
+    title: Spark execution model
+    level: Fundamentals
+    description: Driver, executors, and a DataFrame · Lazy transformations and actions
+      · Partitions and parallel work · Inspect the plan
+    lessons:
+    - id: s01-l1
+      title: Driver, executors, and a DataFrame
+      minutes: 8
+    - id: s01-l2
+      title: Lazy transformations and actions
+      minutes: 8
+    - id: s01-l3
+      title: Partitions and parallel work
+      minutes: 8
+    - id: s01-l4
+      title: Inspect the plan
+      minutes: 8
+    sources:
+    - &id009
+      title: PySpark DataFrame Guide
+      url: https://spark.apache.org/docs/3.5.5/api/python/getting_started/quickstart_df.html
+    - title: Spark Performance Tuning
+      url: https://spark.apache.org/docs/3.5.5/sql-performance-tuning.html
+    status: authored
+    prerequisites: []
+    glossary:
+    - term: Driver, executors, and a DataFrame
+      definition: The driver builds the computation and coordinates tasks.
+    - term: Lazy transformations and actions
+      definition: Transformations build a plan.
+    - term: Partitions and parallel work
+      definition: Partitions are units of data processing, and tasks operate on them.
+    - term: Inspect the plan
+      definition: A logical plan describes requested transformations; the physical
+        plan describes selected execution operations.
+  - id: s02
+    number: 2
+    title: DataFrames and schemas
+    level: Fundamentals
+    description: Schema is a contract · Select and rename columns · Data types and
+      explicit casts · Empty data still has structure
+    lessons:
+    - id: s02-l1
+      title: Schema is a contract
+      minutes: 8
+    - id: s02-l2
+      title: Select and rename columns
+      minutes: 8
+    - id: s02-l3
+      title: Data types and explicit casts
+      minutes: 8
+    - id: s02-l4
+      title: Empty data still has structure
+      minutes: 8
+    sources:
+    - *id009
+    - &id010
+      title: Spark SQL Reference
+      url: https://spark.apache.org/docs/3.5.5/sql-ref.html
+    status: authored
+    prerequisites:
+    - s01
+    glossary:
+    - term: Schema is a contract
+      definition: A schema defines field names, types, and nullability.
+    - term: Select and rename columns
+      definition: Projection controls output columns and their names.
+    - term: Data types and explicit casts
+      definition: Casting changes a column type under Spark SQL rules.
+    - term: Empty data still has structure
+      definition: An empty DataFrame retains its schema.
+  - id: s03
+    number: 3
+    title: Expressions, nulls, and types
+    level: Fundamentals
+    description: Column expressions · Null and three-valued logic · Conditional expressions
+      · Normalize strings and time
+    lessons:
+    - id: s03-l1
+      title: Column expressions
+      minutes: 8
+    - id: s03-l2
+      title: Null and three-valued logic
+      minutes: 8
+    - id: s03-l3
+      title: Conditional expressions
+      minutes: 8
+    - id: s03-l4
+      title: Normalize strings and time
+      minutes: 8
+    sources:
+    - *id009
+    - *id010
+    status: authored
+    prerequisites:
+    - s02
+    glossary:
+    - term: Column expressions
+      definition: PySpark Column expressions build a distributed computation.
+    - term: Null and three-valued logic
+      definition: A null represents missing or unknown information.
+    - term: Conditional expressions
+      definition: when and otherwise express branching in a column expression.
+    - term: Normalize strings and time
+      definition: Built-in functions can trim whitespace and apply case policies.
+  - id: s04
+    number: 4
+    title: Joins and aggregations
+    level: Fundamentals
+    description: Join on the intended key · Preserve unmatched records · Aggregate
+      at the right grain · Verify schema and multiplicity
+    lessons:
+    - id: s04-l1
+      title: Join on the intended key
+      minutes: 8
+    - id: s04-l2
+      title: Preserve unmatched records
+      minutes: 8
+    - id: s04-l3
+      title: Aggregate at the right grain
+      minutes: 8
+    - id: s04-l4
+      title: Verify schema and multiplicity
+      minutes: 8
+    sources:
+    - *id009
+    - *id010
+    status: authored
+    prerequisites:
+    - s03
+    glossary:
+    - term: Join on the intended key
+      definition: A join combines rows using a condition.
+    - term: Preserve unmatched records
+      definition: A left join keeps every left-side row and supplies nulls for missing
+        right-side fields.
+    - term: Aggregate at the right grain
+      definition: Grouping defines the unit represented by each output row.
+    - term: Verify schema and multiplicity
+      definition: DataFrame correctness includes schema and all row occurrences.
+- id: data-engineering
+  title: Data engineering
+  description: A future learning path with a prepared curriculum outline.
+  status: planned
+  modules: []
+  topics:
+  - Storage and formats
+  - Ingestion patterns
+  - Orchestration
+  - Analytical modeling
+  - Batch and streaming
+  - Data quality
+  - Reliability and recovery
+  - Governance
+- id: sql
+  title: SQL
+  description: A future learning path with a prepared curriculum outline.
+  status: planned
+  modules: []
+  topics:
+  - Filtering and joins
+  - Aggregation
+  - Window functions
+  - Subqueries
+  - Relational modeling
+  - Transactions
+  - Query plans
+- id: statistics
+  title: Statistics for data analysis
+  description: A future learning path with a prepared curriculum outline.
+  status: planned
+  modules: []
+  topics:
+  - Descriptive statistics
+  - Probability
+  - Sampling
+  - Estimation
+  - Hypothesis testing
+  - Regression
+  - Experimentation
+projects:
+- id: workforce
+  number: 1
+  title: Workforce and project knowledge graph
+  description: Connect people, organizations, and assignments with a model whose meaning
+    you can defend.
+  hours: 8
+  status: authored
+  brief: Produce a versioned project bundle with your implementation, fixtures, and
+    a short decision record. Use the module workspaces to test each artifact. Milestone
+    notes record self-review evidence; they are not an automated certification of
+    the entire project.
+  rubric:
+  - The model answers every stated competency question.
+  - Identity, lifecycle, and uncertainty are explicit.
+  - Positive and negative cases are tested.
+  - Results and source evidence can be reproduced.
+  - Tradeoffs and remaining limitations are explained.
+  milestones:
+  - id: questions
+    title: Competency questions
+    description: Write six queries the model must support. Include multiple assignments
+      and missing contact details.
+  - id: model
+    title: Identity and ontology
+    description: Create ontology.ttl and data.ttl with Person, Company, Client, Project,
+      and Assignment. Explain stable identifiers and lifecycle.
+  - id: validation
+    title: Queries, shapes, and reasoning
+    description: Add executable query examples, positive and negative SHACL fixtures,
+      and intended/unintended OWL entailment checks.
+  - id: review
+    title: Explain the model
+    description: Document alternatives, limits, and the effect of incomplete data.
+      Export the ontology for an optional Protégé review.
+  sources:
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id007
+- id: commerce
+  number: 2
+  title: Commerce integration
+  description: Reconcile two catalogs and order feeds while retaining the evidence
+    behind every mapping.
+  hours: 12
+  status: authored
+  brief: Produce a versioned project bundle with your implementation, fixtures, and
+    a short decision record. Use the module workspaces to test each artifact. Milestone
+    notes record self-review evidence; they are not an automated certification of
+    the entire project.
+  rubric:
+  - The model answers every stated competency question.
+  - Identity, lifecycle, and uncertainty are explicit.
+  - Positive and negative cases are tested.
+  - Results and source evidence can be reproduced.
+  - Tradeoffs and remaining limitations are explained.
+  milestones:
+  - id: sources
+    title: Source contracts
+    description: Create two fixtures with conflicting product names, reused emails,
+      categories, and order-line identifiers.
+  - id: mapping
+    title: Mappings and identity
+    description: Define stable order and order-line IRIs. Preserve source fields and
+      explain Brand versus Category modeling.
+  - id: resolution
+    title: Resolution and quarantine
+    description: Create deterministic rules, confidence bands, and a review queue.
+      Record false-merge examples and rejected records.
+  - id: provenance
+    title: Reconciliation and evidence
+    description: Link canonical facts to source snapshots and mapping activities.
+      Write reconciliation queries and demonstrate reversing a bad match.
+  sources:
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id007
+- id: publication
+  number: 3
+  title: Reliable knowledge-graph publication
+  description: Publish a validated snapshot, recover from failure, and explain query
+    performance with evidence.
+  hours: 12
+  status: authored
+  brief: Produce a versioned project bundle with your implementation, fixtures, and
+    a short decision record. Use the module workspaces to test each artifact. Milestone
+    notes record self-review evidence; they are not an automated certification of
+    the entire project.
+  rubric:
+  - The model answers every stated competency question.
+  - Identity, lifecycle, and uncertainty are explicit.
+  - Positive and negative cases are tested.
+  - Results and source evidence can be reproduced.
+  - Tradeoffs and remaining limitations are explained.
+  milestones:
+  - id: snapshot
+    title: Reproducible snapshot
+    description: Record source bytes, versioned mappings, stable identifiers, and
+      expected input/output counts.
+  - id: pipeline
+    title: Stage, validate, and publish
+    description: Implement staging and quarantine. Promote the complete graph in one
+      dataset transaction.
+  - id: recovery
+    title: Failure and recovery
+    description: Inject a failure before commit and an ambiguous response after commit.
+      Demonstrate idempotent retries and restoration.
+  - id: performance
+    title: Performance and release evidence
+    description: Compare equivalent queries with controlled measurements. Record engine
+      version, statistics, limits, and rollback instructions.
+  sources:
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id007
