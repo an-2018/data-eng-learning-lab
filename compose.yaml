@@ -1,0 +1,83 @@
+name: graphlab
+services:
+  postgres:
+    image: postgres:16.8-alpine
+    environment:
+      POSTGRES_DB: academy
+      POSTGRES_USER: academy
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-academy}
+    volumes: ["postgres:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U academy"]
+      interval: 5s
+      retries: 12
+    restart: unless-stopped
+  redis:
+    image: redis:7.4.3-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes: ["redis:/data"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 12
+    restart: unless-stopped
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    env_file: .env
+    environment:
+      CONTENT_ROOT: /app/content
+    ports: ["127.0.0.1:8000:8000"]
+    depends_on:
+      postgres: {condition: service_healthy}
+      redis: {condition: service_healthy}
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    restart: unless-stopped
+  ontology-worker:
+    build:
+      context: .
+      dockerfile: api/Dockerfile.worker
+    env_file: .env
+    environment:
+      CONTENT_ROOT: /app/content
+    # Trusted control service only. This socket is NEVER passed to learner containers.
+    volumes: ["/var/run/docker.sock:/var/run/docker.sock"]
+    depends_on: [api]
+    command: ["celery", "-A", "app.worker.celery", "worker", "-Q", "ontology", "--concurrency=2", "--loglevel=INFO"]
+    restart: unless-stopped
+  spark-worker:
+    build:
+      context: .
+      dockerfile: api/Dockerfile.worker
+    env_file: .env
+    environment:
+      CONTENT_ROOT: /app/content
+    volumes: ["/var/run/docker.sock:/var/run/docker.sock"]
+    depends_on: [api]
+    command: ["celery", "-A", "app.worker.celery", "worker", "-Q", "spark", "--concurrency=2", "--loglevel=INFO"]
+    restart: unless-stopped
+  scheduler:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    env_file: .env
+    environment:
+      CONTENT_ROOT: /app/content
+    depends_on: [api]
+    command: ["celery", "-A", "app.worker.celery", "beat", "--schedule", "/tmp/celerybeat-schedule", "--loglevel=INFO"]
+    restart: unless-stopped
+  web:
+    build:
+      context: web
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+        NEXT_PUBLIC_DEV_AUTH: ${NEXT_PUBLIC_DEV_AUTH:-false}
+        NEXT_PUBLIC_OIDC_AUTHORITY: ${NEXT_PUBLIC_OIDC_AUTHORITY:-}
+        NEXT_PUBLIC_OIDC_CLIENT_ID: ${NEXT_PUBLIC_OIDC_CLIENT_ID:-}
+    ports: ["127.0.0.1:3000:3000"]
+    depends_on: [api]
+    restart: unless-stopped
+volumes:
+  postgres:
+  redis:

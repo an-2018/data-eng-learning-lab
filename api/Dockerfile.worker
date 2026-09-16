@@ -1,0 +1,9 @@
+FROM docker:28.5.1-cli AS dockercli
+FROM python:3.11.12-slim-bookworm
+COPY --from=dockercli /usr/local/bin/docker /usr/local/bin/docker
+WORKDIR /app/api
+COPY api/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY api/app ./app
+COPY content /app/content
+CMD ["celery", "-A", "app.worker.celery", "worker", "-Q", "ontology", "--concurrency=2"]

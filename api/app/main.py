@@ -7,7 +7,7 @@ import httpx
 from fastapi import FastAPI, Depends, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, field_validator
-from sqlalchemy import select, func
+from sqlalchemy import select, func, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from .auth import current_user
@@ -113,9 +113,13 @@ def save_workspace(eid:str,data:Draft,user=Depends(current_user),db:Session=Depe
     ws=get_workspace(db,user.id,eid)
     if data.revision is not None and data.revision!=ws.revision:
         raise HTTPException(409,'This draft changed in another tab. Reload before saving.')
-    ws.files,ws.revision,ws.updated_at=data.files,(ws.revision or 0)+1,now()
+    previous=ws.revision
+    changed=db.execute(update(Workspace).where(Workspace.id==ws.id,Workspace.revision==previous).values(files=data.files,revision=previous+1,updated_at=now()))
+    if changed.rowcount != 1:
+        db.rollback()
+        raise HTTPException(409,'This draft changed in another tab. Reload before saving.')
     db.commit()
-    return {'revision':ws.revision,'saved_at':ws.updated_at}
+    return {'revision':previous+1,'saved_at':now()}
 
 class Submission(Draft):
     exercise_id:str

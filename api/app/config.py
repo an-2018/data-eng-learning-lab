@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-CONTENT_ROOT = Path(os.getenv('CONTENT_ROOT', str(ROOT.parent / 'content')))
+CONTENT_ROOT = Path(os.getenv('CONTENT_ROOT', str(ROOT / 'content')))
 DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///./academy.db')
 REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
 PRODUCTION = os.getenv('APP_ENV', 'development') == 'production'

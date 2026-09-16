@@ -4,6 +4,8 @@ import json
 import os
 import subprocess
 import tarfile
+import tempfile
+from pathlib import Path
 import time
 from pathlib import PurePosixPath
 from .config import LIMITS, PRODUCTION
@@ -39,24 +41,25 @@ def execute(runner, files, fixture, contract, job_id, canceled=lambda: False):
     if PRODUCTION and runtime != 'runsc':
         raise RuntimeUnavailable('Production execution requires the runsc sandbox runtime')
     name = 'graphlab-' + job_id.replace('-','')[:32]
-    args = ['create','--name',name,'--label','graphlab.job=true','--runtime',runtime,
+    input_dir = tempfile.TemporaryDirectory(prefix='graphlab-input-')
+    output_dir = tempfile.TemporaryDirectory(prefix='graphlab-output-')
+    input_file = Path(input_dir.name) / 'input.json'
+    input_file.write_text(json.dumps({'runner':runner,'files':files,'fixture':fixture,'contract':contract}), encoding='utf-8')
+    args = ['create','--name',name,'--hostname','graphlab','--add-host','graphlab:127.0.0.1','--label','graphlab.job=true','--runtime',runtime,
             '--network','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges',
             '--user','10001:10001','--pids-limit','256','--cpus',str(cpu),'--memory',memory,
             '--memory-swap',memory,'--ulimit','nofile=1024:1024',
+            '--mount',f'type=bind,src={input_file},dst=/input.json,readonly',
+            '--mount',f'type=bind,src={output_dir.name},dst=/output',
             '--tmpfs','/tmp:rw,nosuid,nodev,size=512m,mode=1777',
             '--tmpfs','/work:rw,nosuid,nodev,size=128m,mode=1777',image_for(runner)]
     created = False
     try:
         docker(args)
         created = True
-        payload = {'runner':runner,'files':files,'fixture':fixture,'contract':contract}
-        encoded = json.dumps(payload).encode()
-        archive = io.BytesIO()
-        with tarfile.open(fileobj=archive,mode='w') as tar:
-            info = tarfile.TarInfo('input.json')
-            info.size, info.mode, info.uid, info.gid = len(encoded), 0o444, 10001, 10001
-            tar.addfile(info,io.BytesIO(encoded))
-        docker(['cp','-',f'{name}:/opt/input/'],input=archive.getvalue())
+        # Input arrives as a read-only bind mount. Learner containers never receive
+        # the worker's Docker socket, hidden answers beyond their fixture, or host paths.
+        # The mount must be present at container creation; docker cp cannot modify a read-only rootfs.
         docker(['start',name])
         start = time.monotonic()
         while True:
@@ -70,16 +73,19 @@ def execute(runner, files, fixture, contract, job_id, canceled=lambda: False):
             time.sleep(.2)
         if state.get('OOMKilled'):
             raise LearnerError('The exercise exceeded its memory allowance. Reduce intermediate results or driver-side collection.')
-        # Output is retrieved from a bounded tmpfs, never trusted as a test verdict.
+        # Output is persisted in a unique worker-owned directory, then parsed by the
+        # trusted grader. It is bounded and never accepted as its own verdict.
         try:
-            raw = docker(['cp',f'{name}:/work/result.json','-'])
-        except RuntimeUnavailable as exc:
-            raise LearnerError('Execution did not produce a result. Check syntax and the required output contract.') from exc
-        with tarfile.open(fileobj=io.BytesIO(raw)) as tar:
-            members = tar.getmembers()
-            if len(members) != 1 or not members[0].isfile() or members[0].size > 2_000_000:
-                raise LearnerError('Execution output exceeded the result limit')
-            result = json.load(tar.extractfile(members[0]))
+            result_file = Path(output_dir.name) / 'result.json'
+            raw = result_file.read_bytes()
+        except OSError as exc:
+            logs_result = subprocess.run(['docker','logs','--tail','40',name],capture_output=True)
+            diagnostic = logs_result.stdout + logs_result.stderr
+            detail = diagnostic.decode(errors='replace')[:2000] or str(exc)
+            raise LearnerError('Execution did not produce a result: ' + detail) from exc
+        if len(raw) > 2_000_000:
+            raise LearnerError('Execution output exceeded the result limit')
+        result = json.loads(raw)
         if 'error' in result:
             raise LearnerError(str(result['error'])[:3000])
         return result
@@ -89,3 +95,5 @@ def execute(runner, files, fixture, contract, job_id, canceled=lambda: False):
                 docker(['rm','-f',name])
             except RuntimeUnavailable:
                 pass  # Scheduled reaper retries cleanup of stopped job containers.
+        input_dir.cleanup()
+        output_dir.cleanup()
