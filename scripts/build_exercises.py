@@ -173,6 +173,16 @@ RDF_SPECS={
 ('Record the mapping version','ex:release2 ex:mappingVersion "2.1" .','Record mappingVersion 2.1 as a string on release2.'),
 ('Mark a deprecated predicate','ex:oldName owl:deprecated true ; rdfs:comment "Use name for new data." .','Deprecate oldName and attach the exact comment Use name for new data.'),
 ('Checkpoint: traceable release','ex:release2 ex:replaces ex:release1 ; ex:validationReport ex:report42 ; ex:approvedBy ex:reviewer ; ex:rollbackTarget ex:snapshot1 .','Record release2 replacing release1 with report42, reviewer, and rollback snapshot1 using the predicates from this module.')],
+'o21':[
+('Describe a viewing event','ex:view1 a ex:ViewingEvent ; ex:forDevice ex:device1 ; ex:content ex:program1 ; ex:durationSeconds 120 .','Create one viewing event linked to device1 and program1 with integer durationSeconds 120.'),
+('Create a genre affinity','ex:affinity1 a ex:GenreAffinity ; ex:forDevice ex:device1 ; ex:forGenre ex:Drama ; ex:score "0.72"^^xsd:decimal .','Create a score-bearing GenreAffinity for device1 and Drama.'),
+('Record an affinity window','ex:affinity1 ex:windowStart "2026-08-01"^^xsd:date ; ex:windowEnd "2026-08-31"^^xsd:date .','Record the stated inclusive measurement window on affinity1.'),
+('Version a derivation','ex:affinity1 ex:methodVersion "genre-share-v1" ; ex:sourceSnapshot ex:gold20260831 .','Link affinity1 to its method version and Gold source snapshot.'),
+('Separate ad exposure','ex:impression1 a ex:AdImpression ; ex:forDevice ex:device1 ; ex:forBrand ex:brand1 .','Model an ad impression separately from viewing or affinity.'),
+('Preserve identity evidence','ex:link1 ex:left ex:device1 ; ex:right ex:household1 ; ex:confidence "0.82"^^xsd:decimal .','Record uncertain device-to-household evidence without owl:sameAs.'),
+('Model a topic observation','ex:topicAffinity1 a ex:TopicAffinity ; ex:forDevice ex:device1 ; ex:forTopic ex:ElectricVehicles ; ex:score "0.40"^^xsd:decimal .','Create a score-bearing TopicAffinity observation.'),
+('Keep content classification','ex:program1 ex:hasGenre ex:Drama ; ex:hasTopic ex:ElectricVehicles .','Link program1 to a genre and topic resource.'),
+('Checkpoint: graph-ready affinity','ex:affinity1 a ex:GenreAffinity ; ex:forDevice ex:device1 ; ex:forGenre ex:Drama ; ex:score "0.72"^^xsd:decimal ; ex:methodVersion "genre-share-v1" .','Create a graph-ready affinity with type, endpoints, decimal score, and method version.')],
 }
 
 def build_rdf():
@@ -362,9 +372,10 @@ def build_spark_advanced():
       's10':('Preserve a lookup join','result = people.join(companies, "company_id", "left").select("name", "company_name")', [('name','string'),('company_name','string')],[{'name':'Ava','company_name':'Northstar'},{'name':'Ben','company_name':'Northstar'},{'name':'Cyra','company_name':'Orbit'},{'name':'Dev','company_name':None}], 'Use the physical plan and statistics to justify a join strategy; do not infer it from source code alone.'),
       's11':('Replay-safe event identity','result = people.dropDuplicates(["name", "company_id"]).select("name", "company_id")', [('name','string'),('company_id','long')],[{'name':'Ava','company_id':1},{'name':'Ben','company_id':1},{'name':'Cyra','company_id':2},{'name':'Dev','company_id':9}], 'For streaming, pair a stable event identity with checkpoint and sink contracts; a batch deduplication is only a bounded demonstration.'),
       's12':('Observable curated output','result = people.filter("years >= 0").select("name", "company_id")', [('name','string'),('company_id','long')],[{'name':'Ava','company_id':1},{'name':'Ben','company_id':1},{'name':'Cyra','company_id':2},{'name':'Dev','company_id':9}], 'Record snapshot, configuration, output counts, and release version alongside the curated output.'),
+      's13':('Media-style audience summary','from pyspark.sql import functions as F\nresult = people.groupBy("company_id").agg(F.sum("years").alias("total_view_seconds"), F.countDistinct("name").alias("unique_content_count"))', [('company_id','long'),('total_view_seconds','long'),('unique_content_count','long')],[{'company_id':1,'total_view_seconds':6,'unique_content_count':2},{'company_id':2,'total_view_seconds':7,'unique_content_count':1},{'company_id':9,'total_view_seconds':1,'unique_content_count':1}], 'In the media project, replace the teaching fields with device ID, content ID, event time, and cleaned non-overlapping duration. Document the input grain before aggregating.'),
     }
     def expected(fields,records):
-        non_nullable={'rank','people','count'}
+        non_nullable={'rank','people','count','unique_content_count'}
         return {'schema':schema([(n,t,n not in non_nullable) for n,t in fields]),'rows':records}
     for mid,(title,solution,fields,records,hint) in recipes.items():
         for i in range(1,10):

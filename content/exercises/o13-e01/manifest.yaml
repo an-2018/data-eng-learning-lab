@@ -146,7 +146,7 @@ fixtures:
           value: Ben
       - s:
           type: uri
-          value: https://example.org/ben
+          value: https://example.org/ava
         p:
           type: uri
           value: http://www.w3.org/1999/02/22-rdf-syntax-ns#type
@@ -155,7 +155,7 @@ fixtures:
           value: https://example.org/Person
       - s:
           type: uri
-          value: https://example.org/ava
+          value: https://example.org/ben
         p:
           type: uri
           value: http://www.w3.org/1999/02/22-rdf-syntax-ns#type
@@ -219,6 +219,15 @@ fixtures:
           value: https://example.org/cyra
         p:
           type: uri
+          value: https://example.org/rawName
+        o:
+          type: literal
+          value: Cyra
+      - s:
+          type: uri
+          value: https://example.org/cyra
+        p:
+          type: uri
           value: https://example.org/employeeId
         o:
           type: literal
@@ -232,15 +241,6 @@ fixtures:
         o:
           type: uri
           value: https://example.org/Person
-      - s:
-          type: uri
-          value: https://example.org/cyra
-        p:
-          type: uri
-          value: https://example.org/rawName
-        o:
-          type: literal
-          value: Cyra
     head:
       vars:
       - s

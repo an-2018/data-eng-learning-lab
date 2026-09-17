@@ -759,6 +759,50 @@ tracks:
     - term: Govern change and deprecation
       definition: Review compatibility, mapping impacts, validation, query behavior,
         access effects, and rollback.
+  - id: o21
+    number: 21
+    title: Media audience knowledge graphs and SHACL
+    level: Applied project
+    description: Model observed and derived media facts · Represent affinity evidence
+      and windows · Preserve media and identity distinctions · Validate graph-ready
+      audience attributes
+    lessons:
+    - id: o21-l1
+      title: Model observed and derived media facts
+      minutes: 8
+    - id: o21-l2
+      title: Represent affinity evidence and windows
+      minutes: 8
+    - id: o21-l3
+      title: Preserve media and identity distinctions
+      minutes: 8
+    - id: o21-l4
+      title: Validate graph-ready audience attributes
+      minutes: 8
+    sources:
+    - *id001
+    - *id004
+    - *id007
+    - *id005
+    - &id014
+      title: IAB Tech Lab OpenRTB 2.6
+      url: https://iabtechlab.com/wp-content/uploads/2022/05/OpenRTB-2.6.pdf
+    status: authored
+    prerequisites:
+    - o20
+    glossary:
+    - term: Model observed and derived media facts
+      definition: Viewing events, web activity, ad impressions, and derived affinities
+        are different things.
+    - term: Represent affinity evidence and windows
+      definition: An affinity needs identity when it has a score, time window, method
+        version, evidence, and provenance.
+    - term: Preserve media and identity distinctions
+      definition: Content sponsorship, ad exposure, brand web interaction, and purchase
+        are separate signals.
+    - term: Validate graph-ready audience attributes
+      definition: SHACL verifies the staged RDF contract after Spark schema and quality
+        checks.
 - id: spark
   title: Apache Spark
   description: Turn data into understanding with PySpark and Spark SQL. Build transformations
@@ -1197,6 +1241,47 @@ tracks:
     - term: Control cost and access
       definition: Set resource limits, least-privilege credentials, storage retention,
         and budget alerts.
+  - id: s13
+    number: 13
+    title: Media audience intelligence pipelines
+    level: Applied project
+    description: Build Bronze, Silver, and Gold deliberately · Calculate viewing summaries
+      safely · Compute affinities with attribution rules · Handle late and corrected
+      activity
+    lessons:
+    - id: s13-l1
+      title: Build Bronze, Silver, and Gold deliberately
+      minutes: 8
+    - id: s13-l2
+      title: Calculate viewing summaries safely
+      minutes: 8
+    - id: s13-l3
+      title: Compute affinities with attribution rules
+      minutes: 8
+    - id: s13-l4
+      title: Handle late and corrected activity
+      minutes: 8
+    sources:
+    - *id011
+    - *id012
+    - *id013
+    - title: Databricks medallion architecture
+      url: https://docs.databricks.com/gcp/en/lakehouse/medallion
+    - *id014
+    status: authored
+    prerequisites:
+    - s12
+    glossary:
+    - term: Build Bronze, Silver, and Gold deliberately
+      definition: Bronze retains raw TV and web events with source and ingestion metadata.
+    - term: Calculate viewing summaries safely
+      definition: Aggregate duration only after defining whether events are independent
+        intervals or cumulative progress updates.
+    - term: Compute affinities with attribution rules
+      definition: Genre, brand, and topic affinities are derived features.
+    - term: Handle late and corrected activity
+      definition: Use event time, watermark, checkpoint, stable event IDs, and an
+        explicit correction policy.
 - id: data-engineering
   title: Data engineering
   description: A future learning path with a prepared curriculum outline.
@@ -1358,3 +1443,53 @@ projects:
   - *id003
   - *id004
   - *id007
+- id: media-audience-intelligence
+  number: 4
+  title: 'Media audience intelligence: events to validated graph attributes'
+  description: Build a TV, web, and advertising-event pipeline that produces explainable
+    audience features and a validated knowledge graph.
+  hours: 16
+  status: authored
+  brief: Implement a reproducible Bronze/Silver/Gold pipeline over synthetic TV viewing,
+    web activity, content metadata, and advertising signals. Publish selected graph-ready
+    entities and affinity observations only after RDF validation. Keep raw events
+    in the lakehouse model and preserve source, method, and identity evidence.
+  rubric:
+  - Raw events, derived attributes, and inferred preference claims are kept distinct.
+  - Viewing summaries avoid double counting and document input grain.
+  - Genre, topic, and brand signals have explicit attribution and method versions.
+  - Identity links preserve evidence, confidence, and temporal limits.
+  - SHACL positive and negative cases protect the published RDF contract.
+  - Late events, duplicates, corrections, and recovery are demonstrated.
+  milestones:
+  - id: domain
+    title: Media domain contract
+    description: Define source schemas, vocabulary, content/ad/identity distinctions,
+      and 15 competency questions.
+  - id: bronze
+    title: Bronze event capture
+    description: Generate deterministic viewing, web, and ad-event snapshots with
+      source metadata, duplicates, invalid durations, unknown content, and late records.
+  - id: silver
+    title: Trusted events and enrichment
+    description: Deduplicate stable event IDs, quarantine invalid data, enrich content
+      metadata, and retain identity-link evidence.
+  - id: gold
+    title: Audience features
+    description: Create viewing summaries, explainable genre/topic/brand scores, and
+      lifecycle signals with method and measurement-window versions.
+  - id: rdf
+    title: Graph mapping and SHACL
+    description: Map selected Gold outputs to stable RDF IRIs; validate affinity,
+      identity-evidence, and provenance shapes against positive and negative graphs.
+  - id: recovery
+    title: Incremental recovery demonstration
+    description: Process duplicate, late, and corrected batches; reconcile outputs,
+      preserve validation reports, and explain promotion and rollback.
+  sources:
+  - *id011
+  - *id012
+  - *id013
+  - *id004
+  - *id007
+  - *id005
