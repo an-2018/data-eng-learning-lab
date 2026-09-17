@@ -119,33 +119,6 @@ fixtures:
       bindings:
       - s:
           type: uri
-          value: https://example.org/ben
-        p:
-          type: uri
-          value: https://example.org/rawName
-        o:
-          type: literal
-          value: Ben
-      - s:
-          type: uri
-          value: https://example.org/ava
-        p:
-          type: uri
-          value: http://www.w3.org/1999/02/22-rdf-syntax-ns#type
-        o:
-          type: uri
-          value: https://example.org/Person
-      - s:
-          type: uri
-          value: https://example.org/ben
-        p:
-          type: uri
-          value: http://www.w3.org/1999/02/22-rdf-syntax-ns#type
-        o:
-          type: uri
-          value: https://example.org/Person
-      - s:
-          type: uri
           value: https://example.org/ava
         p:
           type: uri
@@ -162,6 +135,33 @@ fixtures:
         o:
           type: literal
           value: E1
+      - s:
+          type: uri
+          value: https://example.org/ben
+        p:
+          type: uri
+          value: https://example.org/rawName
+        o:
+          type: literal
+          value: Ben
+      - s:
+          type: uri
+          value: https://example.org/ben
+        p:
+          type: uri
+          value: http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+        o:
+          type: uri
+          value: https://example.org/Person
+      - s:
+          type: uri
+          value: https://example.org/ava
+        p:
+          type: uri
+          value: http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+        o:
+          type: uri
+          value: https://example.org/Person
     head:
       vars:
       - s

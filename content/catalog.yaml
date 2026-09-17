@@ -508,7 +508,8 @@ tracks:
       title: Backup and restore evidence
       minutes: 8
     sources:
-    - title: Apache Jena TDB2
+    - &id010
+      title: Apache Jena TDB2
       url: https://jena.apache.org/documentation/tdb2/
     - *id008
     status: authored
@@ -546,7 +547,8 @@ tracks:
       minutes: 8
     sources:
     - *id002
-    - title: Jena Query Explanation
+    - &id009
+      title: Jena Query Explanation
       url: https://jena.apache.org/documentation/query/explain.html
     status: authored
     prerequisites:
@@ -601,6 +603,162 @@ tracks:
     - term: Release with explicit ownership
       definition: Record who owns vocabulary changes, mapping decisions, review queues,
         and recovery.
+  - id: o17
+    number: 17
+    title: Query optimization and benchmarking
+    level: Production
+    description: Measure before tuning · Use selective constraints · Control joins
+      and cardinality · Bound paths and optionals
+    lessons:
+    - id: o17-l1
+      title: Measure before tuning
+      minutes: 8
+    - id: o17-l2
+      title: Use selective constraints
+      minutes: 8
+    - id: o17-l3
+      title: Control joins and cardinality
+      minutes: 8
+    - id: o17-l4
+      title: Bound paths and optionals
+      minutes: 8
+    sources:
+    - *id002
+    - *id009
+    - *id010
+    status: authored
+    prerequisites:
+    - o16
+    glossary:
+    - term: Measure before tuning
+      definition: Treat performance as an experiment.
+    - term: Use selective constraints
+      definition: Exact identifiers, narrow graph scope, and constrained values can
+        reduce intermediate bindings.
+    - term: Control joins and cardinality
+      definition: Shared variables connect patterns.
+    - term: Bound paths and optionals
+      definition: Unbounded paths and broad OPTIONAL branches can expand on cyclic
+        or high-degree graphs.
+  - id: o18
+    number: 18
+    title: Dataset architecture, federation, and search
+    level: Production
+    description: Design named-graph boundaries · Federate deliberately · Pair search
+      with graph evidence · Cache with provenance
+    lessons:
+    - id: o18-l1
+      title: Design named-graph boundaries
+      minutes: 8
+    - id: o18-l2
+      title: Federate deliberately
+      minutes: 8
+    - id: o18-l3
+      title: Pair search with graph evidence
+      minutes: 8
+    - id: o18-l4
+      title: Cache with provenance
+      minutes: 8
+    sources:
+    - *id002
+    - *id010
+    - *id007
+    status: authored
+    prerequisites:
+    - o17
+    glossary:
+    - term: Design named-graph boundaries
+      definition: Named graphs separate source snapshots, staging, quarantine, publication,
+        and provenance.
+    - term: Federate deliberately
+      definition: Federated queries depend on remote services.
+    - term: Pair search with graph evidence
+      definition: A search index supports lexical discovery while the graph answers
+        identity, provenance, and relationship questions.
+    - term: Cache with provenance
+      definition: Cache entries need dataset version, parameters, graph scope, and
+        inference mode.
+  - id: o19
+    number: 19
+    title: Reliable ingestion, storage, and recovery
+    level: Production
+    description: Bulk load and validate in stages · Retry unknown outcomes safely
+      · Restore and reconcile · Isolate concurrent workloads
+    lessons:
+    - id: o19-l1
+      title: Bulk load and validate in stages
+      minutes: 8
+    - id: o19-l2
+      title: Retry unknown outcomes safely
+      minutes: 8
+    - id: o19-l3
+      title: Restore and reconcile
+      minutes: 8
+    - id: o19-l4
+      title: Isolate concurrent workloads
+      minutes: 8
+    sources:
+    - *id010
+    - *id008
+    - *id004
+    - *id007
+    status: authored
+    prerequisites:
+    - o18
+    glossary:
+    - term: Bulk load and validate in stages
+      definition: Bulk loading optimizes placement but does not remove source contracts,
+        mapping versions, validation, quarantine, and atomic promotion.
+    - term: Retry unknown outcomes safely
+      definition: A timeout can happen after commit.
+    - term: Restore and reconcile
+      definition: Test a backup by restoring it and running counts, validation, and
+        competency queries against recorded source and mapping versions..
+    - term: Isolate concurrent workloads
+      definition: Document transaction behavior, back-pressure, worker limits, and
+        workload separation.
+  - id: o20
+    number: 20
+    title: Production governance, security, and incident response
+    level: Production
+    description: Define access boundaries · Protect sensitive graph data · Respond
+      to incidents · Govern change and deprecation
+    lessons:
+    - id: o20-l1
+      title: Define access boundaries
+      minutes: 8
+    - id: o20-l2
+      title: Protect sensitive graph data
+      minutes: 8
+    - id: o20-l3
+      title: Respond to incidents
+      minutes: 8
+    - id: o20-l4
+      title: Govern change and deprecation
+      minutes: 8
+    sources:
+    - *id007
+    - *id004
+    - *id003
+    - *id010
+    status: authored
+    prerequisites:
+    - o19
+    glossary:
+    - term: Define access boundaries
+      definition: Use least-privilege read, write, publication, operations, and administration
+        roles.
+    - term: Protect sensitive graph data
+      definition: Classify sensitive predicates, minimize retention, encrypt backups
+        and transport, and preserve access evidence without writing sensitive values
+        to logs..
+    - term: Respond to incidents
+      definition: Preserve bounded evidence, stop unsafe promotion, identify affected
+        graph versions, revoke access when needed, restore a known-good release, and
+        rehearse this procedure..
+    - term: Govern change and deprecation
+      definition: Review compatibility, mapping impacts, validation, query behavior,
+        access effects, and rollback.
 - id: spark
   title: Apache Spark
   description: Turn data into understanding with PySpark and Spark SQL. Build transformations
@@ -627,10 +785,10 @@ tracks:
       title: Inspect the plan
       minutes: 8
     sources:
-    - &id009
+    - &id011
       title: PySpark DataFrame Guide
       url: https://spark.apache.org/docs/3.5.5/api/python/getting_started/quickstart_df.html
-    - &id011
+    - &id013
       title: Spark Performance Tuning
       url: https://spark.apache.org/docs/3.5.5/sql-performance-tuning.html
     status: authored
@@ -665,8 +823,8 @@ tracks:
       title: Empty data still has structure
       minutes: 8
     sources:
-    - *id009
-    - &id010
+    - *id011
+    - &id012
       title: Spark SQL Reference
       url: https://spark.apache.org/docs/3.5.5/sql-ref.html
     status: authored
@@ -701,8 +859,8 @@ tracks:
       title: Normalize strings and time
       minutes: 8
     sources:
-    - *id009
-    - *id010
+    - *id011
+    - *id012
     status: authored
     prerequisites:
     - s02
@@ -735,8 +893,8 @@ tracks:
       title: Verify schema and multiplicity
       minutes: 8
     sources:
-    - *id009
-    - *id010
+    - *id011
+    - *id012
     status: authored
     prerequisites:
     - s03
@@ -770,8 +928,8 @@ tracks:
       title: SQL semantics and DataFrame equivalence
       minutes: 8
     sources:
-    - *id010
-    - *id009
+    - *id012
+    - *id011
     status: authored
     prerequisites:
     - s04
@@ -805,8 +963,8 @@ tracks:
       title: Ranking, ties, and null ordering
       minutes: 8
     sources:
-    - *id010
-    - *id009
+    - *id012
+    - *id011
     status: authored
     prerequisites:
     - s05
@@ -842,8 +1000,8 @@ tracks:
       title: Small files and compaction
       minutes: 8
     sources:
-    - *id009
-    - *id010
+    - *id011
+    - *id012
     status: authored
     prerequisites:
     - s06
@@ -878,8 +1036,8 @@ tracks:
       title: Repeatability and observability
       minutes: 8
     sources:
-    - *id009
-    - *id010
+    - *id011
+    - *id012
     status: authored
     prerequisites:
     - s07
@@ -914,8 +1072,8 @@ tracks:
       title: Diagnose skew
       minutes: 8
     sources:
+    - *id013
     - *id011
-    - *id009
     status: authored
     prerequisites:
     - s08
@@ -951,8 +1109,8 @@ tracks:
       title: Adaptive query execution
       minutes: 8
     sources:
-    - *id011
-    - *id010
+    - *id013
+    - *id012
     status: authored
     prerequisites:
     - s09
@@ -985,8 +1143,8 @@ tracks:
       title: Bounded test streams
       minutes: 8
     sources:
-    - *id009
-    - *id010
+    - *id011
+    - *id012
     status: authored
     prerequisites:
     - s10
@@ -1021,8 +1179,8 @@ tracks:
       title: Control cost and access
       minutes: 8
     sources:
+    - *id013
     - *id011
-    - *id009
     status: authored
     prerequisites:
     - s11

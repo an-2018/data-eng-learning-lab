@@ -120,13 +120,13 @@ fixtures:
       bindings:
       - s:
           type: uri
-          value: https://example.org/ben
+          value: https://example.org/ava
         snapshot:
           type: uri
           value: https://example.org/snapshot1
       - s:
           type: uri
-          value: https://example.org/ava
+          value: https://example.org/ben
         snapshot:
           type: uri
           value: https://example.org/snapshot1
@@ -174,13 +174,13 @@ fixtures:
       bindings:
       - s:
           type: uri
-          value: https://example.org/cyra
+          value: https://example.org/dev
         snapshot:
           type: uri
           value: https://example.org/snapshot1
       - s:
           type: uri
-          value: https://example.org/dev
+          value: https://example.org/cyra
         snapshot:
           type: uri
           value: https://example.org/snapshot1

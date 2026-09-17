@@ -89,7 +89,29 @@ QUERY_SPECS={
  ('Project only requested values','Return distinct ?company resources with employees; omit names and employees.','SELECT DISTINCT ?company WHERE { ?p ex:worksFor ?company }'),
  ('Bound an intermediate group','Return ?person with at least two assignments using the correct grouping grain.','SELECT ?person WHERE { ?a ex:person ?person } GROUP BY ?person HAVING(COUNT(?a)>=2)'),
  ('Checkpoint: equivalent result contract','Return ?client and ?people, distinct contributor counts. Optimization must preserve these values.','SELECT ?client (COUNT(DISTINCT ?p) AS ?people) WHERE { ?a ex:person ?p ; ex:project ?pr . ?pr ex:client ?client } GROUP BY ?client')],
+'o17':[
+ ('Anchor an identifier lookup','Return person and company for employeeId E-001.','SELECT ?person ?company WHERE { ?person ex:employeeId "E-001" ; ex:worksFor ?company }'),
+ ('Repair a disconnected join','Return person and company name through a shared company variable.','SELECT ?person ?companyName WHERE { ?person ex:worksFor ?company . ?company ex:name ?companyName }'),
+ ('Scope a snapshot','Return people at Northstar only from GRAPH ex:snapshot.','SELECT ?person WHERE { GRAPH ex:snapshot { ?person ex:worksFor ex:northstar } }'),
+ ('Bind a path endpoint','Return people who reach Cyra through reportsTo.','SELECT ?person WHERE { ?person ex:reportsTo+ ex:cyra }'),
+ ('Count at employee grain','Return company and distinct employee count.','SELECT ?company (COUNT(DISTINCT ?p) AS ?people) WHERE { ?p ex:worksFor ?company } GROUP BY ?company'),
+ ('Keep optional semantics','Return each person and optional email.','SELECT ?person ?email WHERE { ?person a ex:Person OPTIONAL { ?person ex:email ?email } }'),
+ ('Avoid surplus projection','Return distinct companies with employees.','SELECT DISTINCT ?company WHERE { ?p ex:worksFor ?company }'),
+ ('Bound an aggregate','Return people with two or more assignments.','SELECT ?person WHERE { ?a ex:person ?person } GROUP BY ?person HAVING(COUNT(?a)>=2)'),
+ ('Checkpoint: preserve result semantics','Return client and distinct contributor count.','SELECT ?client (COUNT(DISTINCT ?p) AS ?people) WHERE { ?a ex:person ?p ; ex:project ?project . ?project ex:client ?client } GROUP BY ?client')],
+'o18':[
+ ('Query one source graph','Return people in the snapshot graph.','SELECT ?person WHERE { GRAPH ex:snapshot { ?person a ex:Person } }'),
+ ('Scope an employer lookup','Return snapshot people working for Northstar.','SELECT ?person WHERE { GRAPH ex:snapshot { ?person ex:worksFor ex:northstar } }'),
+ ('Find source labels','Return resources and labels from the source graph.','SELECT ?resource ?label WHERE { GRAPH ex:snapshot { ?resource ex:name ?label } }'),
+ ('Count a source graph','Return number of people in the snapshot.','SELECT (COUNT(?person) AS ?people) WHERE { GRAPH ex:snapshot { ?person a ex:Person } }'),
+ ('Compare graph boundaries','Return companies referenced within snapshot.','SELECT DISTINCT ?company WHERE { GRAPH ex:snapshot { ?person ex:worksFor ?company } }'),
+ ('Retain source context','Return person and company from snapshot.','SELECT ?person ?company WHERE { GRAPH ex:snapshot { ?person ex:worksFor ?company } }'),
+ ('Constrain graph search','Return the named Atlas project from snapshot.','SELECT ?project WHERE { GRAPH ex:snapshot { ?project ex:client ex:acme } }'),
+ ('Discover reusable labels','Return name labels for companies.','SELECT ?company ?name WHERE { GRAPH ex:snapshot { ?company a ex:Company ; ex:name ?name } }'),
+ ('Checkpoint: source-scoped contributors','Return snapshot people assigned to Acme projects.','SELECT ?person WHERE { GRAPH ex:snapshot { ?a ex:person ?person ; ex:project ?project . ?project ex:client ex:acme } }')],
 }
+QUERY_SPECS['o19']=QUERY_SPECS['o17']
+QUERY_SPECS['o20']=QUERY_SPECS['o18']
 
 def build_queries():
     for mid,specs in QUERY_SPECS.items():

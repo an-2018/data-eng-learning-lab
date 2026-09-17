@@ -1,0 +1,572 @@
+id: o19-e06
+title: Keep optional semantics
+module_id: o19
+version: 1.0.0
+dataset_version: '1'
+grader_version: '1'
+runtime_version: '1'
+difficulty: Advanced
+mode: practice
+runner: sparql
+minutes: 15
+objectives:
+- Return each person and optional email.
+prerequisites:
+- o19-e01
+statement: 'Return each person and optional email.
+
+
+  The dataset contains Person, Company, Project, and Assignment resources. All example
+  IRIs use https://example.org/.'
+requirements:
+- Implement the behavior described above for every fixture.
+- Use the exact output variable names or file contract shown in the task.
+- Preserve identity, datatypes, and duplicate rows unless the task explicitly requests
+  a change.
+starter:
+  query.rq: 'PREFIX ex: <https://example.org/>
+
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+
+    # Write a complete query here.
+
+    '
+solution:
+  query.rq: 'PREFIX ex: <https://example.org/>
+
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+    SELECT ?person ?email WHERE { ?person a ex:Person OPTIONAL { ?person ex:email
+    ?email } }'
+explanation: Trace the shared variables between triple patterns. Use the exact output
+  names requested and preserve the stated result grain.
+hints:
+- Start with the entity or output grain requested by the question.
+- Trace the shared variables between triple patterns. Use the exact output names requested
+  and preserve the stated result grain.
+- Use the public dataset to trace one result from its inputs. Then consider missing
+  values and repeated matches.
+sources:
+- title: Apache Jena TDB2
+  url: https://jena.apache.org/documentation/tdb2/
+- title: Apache Jena Transactions
+  url: https://jena.apache.org/documentation/txn/
+- title: W3C SHACL
+  url: https://www.w3.org/TR/shacl/
+- title: W3C PROV-O
+  url: https://www.w3.org/TR/prov-o/
+source_review_date: '2026-09-15'
+status: ready
+review_status: authored_pending_runtime_audit
+fixtures:
+- name: Workforce sample
+  public: true
+  data: '@prefix ex: <https://example.org/> .
+
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+    ex:ava a ex:Person ; ex:name "Ava" ; ex:worksFor ex:northstar ; ex:email "ava@work.example"
+    ; ex:years 4 ; ex:reportsTo ex:ben ; ex:employeeId "E-001" .
+
+    ex:ben a ex:Person ; ex:name "Ben" ; ex:worksFor ex:northstar ; ex:years 2 ; ex:reportsTo
+    ex:cyra ; ex:employeeId "E-002" .
+
+    ex:cyra a ex:Person ; ex:name "Cyra" ; ex:worksFor ex:orbit ; ex:contractsFor
+    ex:northstar ; ex:email "cyra@work.example" ; ex:years 7 .
+
+    ex:dev a ex:Person ; ex:name "Dev" ; ex:worksFor ex:orbit ; ex:contractsFor ex:orbit
+    ; ex:years 1 .
+
+    ex:northstar a ex:Company ; ex:name "Northstar" .
+
+    ex:orbit a ex:Company ; ex:name "Orbit" .
+
+    ex:atlas a ex:Project ; ex:client ex:acme ; ex:name "Atlas" .
+
+    ex:beacon a ex:Project ; ex:client ex:delta ; ex:name "Beacon" .
+
+    ex:a1 a ex:Assignment ; ex:person ex:ava ; ex:project ex:atlas ; ex:role "Engineer"
+    .
+
+    ex:a2 a ex:Assignment ; ex:person ex:ava ; ex:project ex:beacon ; ex:role "Reviewer"
+    .
+
+    ex:a3 a ex:Assignment ; ex:person ex:ben ; ex:project ex:atlas ; ex:role "Engineer"
+    .'
+  format: turtle
+  input:
+    data: '@prefix ex: <https://example.org/> .
+
+      @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+      @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+      @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+      @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+      @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+      ex:ava a ex:Person ; ex:name "Ava" ; ex:worksFor ex:northstar ; ex:email "ava@work.example"
+      ; ex:years 4 ; ex:reportsTo ex:ben ; ex:employeeId "E-001" .
+
+      ex:ben a ex:Person ; ex:name "Ben" ; ex:worksFor ex:northstar ; ex:years 2 ;
+      ex:reportsTo ex:cyra ; ex:employeeId "E-002" .
+
+      ex:cyra a ex:Person ; ex:name "Cyra" ; ex:worksFor ex:orbit ; ex:contractsFor
+      ex:northstar ; ex:email "cyra@work.example" ; ex:years 7 .
+
+      ex:dev a ex:Person ; ex:name "Dev" ; ex:worksFor ex:orbit ; ex:contractsFor
+      ex:orbit ; ex:years 1 .
+
+      ex:northstar a ex:Company ; ex:name "Northstar" .
+
+      ex:orbit a ex:Company ; ex:name "Orbit" .
+
+      ex:atlas a ex:Project ; ex:client ex:acme ; ex:name "Atlas" .
+
+      ex:beacon a ex:Project ; ex:client ex:delta ; ex:name "Beacon" .
+
+      ex:a1 a ex:Assignment ; ex:person ex:ava ; ex:project ex:atlas ; ex:role "Engineer"
+      .
+
+      ex:a2 a ex:Assignment ; ex:person ex:ava ; ex:project ex:beacon ; ex:role "Reviewer"
+      .
+
+      ex:a3 a ex:Assignment ; ex:person ex:ben ; ex:project ex:atlas ; ex:role "Engineer"
+      .'
+    graphs:
+      https://example.org/snapshot: '@prefix ex: <https://example.org/> .
+
+        @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+        @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+        @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+        @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+        @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+        ex:ava a ex:Person ; ex:name "Ava" ; ex:worksFor ex:northstar ; ex:email "ava@work.example"
+        ; ex:years 4 ; ex:reportsTo ex:ben ; ex:employeeId "E-001" .
+
+        ex:ben a ex:Person ; ex:name "Ben" ; ex:worksFor ex:northstar ; ex:years 2
+        ; ex:reportsTo ex:cyra ; ex:employeeId "E-002" .
+
+        ex:cyra a ex:Person ; ex:name "Cyra" ; ex:worksFor ex:orbit ; ex:contractsFor
+        ex:northstar ; ex:email "cyra@work.example" ; ex:years 7 .
+
+        ex:dev a ex:Person ; ex:name "Dev" ; ex:worksFor ex:orbit ; ex:contractsFor
+        ex:orbit ; ex:years 1 .
+
+        ex:northstar a ex:Company ; ex:name "Northstar" .
+
+        ex:orbit a ex:Company ; ex:name "Orbit" .
+
+        ex:atlas a ex:Project ; ex:client ex:acme ; ex:name "Atlas" .
+
+        ex:beacon a ex:Project ; ex:client ex:delta ; ex:name "Beacon" .
+
+        ex:a1 a ex:Assignment ; ex:person ex:ava ; ex:project ex:atlas ; ex:role "Engineer"
+        .
+
+        ex:a2 a ex:Assignment ; ex:person ex:ava ; ex:project ex:beacon ; ex:role
+        "Reviewer" .
+
+        ex:a3 a ex:Assignment ; ex:person ex:ben ; ex:project ex:atlas ; ex:role "Engineer"
+        .'
+  expected:
+    results:
+      bindings:
+      - person:
+          type: uri
+          value: https://example.org/ava
+        email:
+          type: literal
+          value: ava@work.example
+      - person:
+          type: uri
+          value: https://example.org/ben
+      - person:
+          type: uri
+          value: https://example.org/cyra
+        email:
+          type: literal
+          value: cyra@work.example
+      - person:
+          type: uri
+          value: https://example.org/dev
+    head:
+      vars:
+      - person
+      - email
+  feedback: Check the join variables, missing values, projected columns, and duplicate
+    counts.
+- name: Alternate workforce
+  public: false
+  data: '@prefix ex: <https://example.org/> .
+
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+    ex:ella a ex:Person ; ex:name "Ella" ; ex:worksFor ex:northstar ; ex:email "ava@work.example"
+    ; ex:years 4 ; ex:reportsTo ex:farid ; ex:employeeId "E-001" .
+
+    ex:farid a ex:Person ; ex:name "Farid" ; ex:worksFor ex:northstar ; ex:years 2
+    ; ex:reportsTo ex:cyra ; ex:employeeId "E-002" .
+
+    ex:cyra a ex:Person ; ex:name "Cyra" ; ex:worksFor ex:orbit ; ex:contractsFor
+    ex:northstar ; ex:email "cyra@work.example" ; ex:years 7 .
+
+    ex:dev a ex:Person ; ex:name "Dev" ; ex:worksFor ex:orbit ; ex:contractsFor ex:orbit
+    ; ex:years 1 .
+
+    ex:northstar a ex:Company ; ex:name "Northstar" .
+
+    ex:orbit a ex:Company ; ex:name "Orbit" .
+
+    ex:atlas a ex:Project ; ex:client ex:acme ; ex:name "Atlas" .
+
+    ex:beacon a ex:Project ; ex:client ex:delta ; ex:name "Beacon" .
+
+    ex:a1 a ex:Assignment ; ex:person ex:ella ; ex:project ex:atlas ; ex:role "Engineer"
+    .
+
+    ex:a2 a ex:Assignment ; ex:person ex:ella ; ex:project ex:beacon ; ex:role "Reviewer"
+    .
+
+    ex:a3 a ex:Assignment ; ex:person ex:farid ; ex:project ex:atlas ; ex:role "Engineer"
+    .
+
+    ex:guest a ex:Person ; ex:name "Guest" ; ex:years 4 .'
+  format: turtle
+  input:
+    data: '@prefix ex: <https://example.org/> .
+
+      @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+      @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+      @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+      @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+      @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+      ex:ella a ex:Person ; ex:name "Ella" ; ex:worksFor ex:northstar ; ex:email "ava@work.example"
+      ; ex:years 4 ; ex:reportsTo ex:farid ; ex:employeeId "E-001" .
+
+      ex:farid a ex:Person ; ex:name "Farid" ; ex:worksFor ex:northstar ; ex:years
+      2 ; ex:reportsTo ex:cyra ; ex:employeeId "E-002" .
+
+      ex:cyra a ex:Person ; ex:name "Cyra" ; ex:worksFor ex:orbit ; ex:contractsFor
+      ex:northstar ; ex:email "cyra@work.example" ; ex:years 7 .
+
+      ex:dev a ex:Person ; ex:name "Dev" ; ex:worksFor ex:orbit ; ex:contractsFor
+      ex:orbit ; ex:years 1 .
+
+      ex:northstar a ex:Company ; ex:name "Northstar" .
+
+      ex:orbit a ex:Company ; ex:name "Orbit" .
+
+      ex:atlas a ex:Project ; ex:client ex:acme ; ex:name "Atlas" .
+
+      ex:beacon a ex:Project ; ex:client ex:delta ; ex:name "Beacon" .
+
+      ex:a1 a ex:Assignment ; ex:person ex:ella ; ex:project ex:atlas ; ex:role "Engineer"
+      .
+
+      ex:a2 a ex:Assignment ; ex:person ex:ella ; ex:project ex:beacon ; ex:role "Reviewer"
+      .
+
+      ex:a3 a ex:Assignment ; ex:person ex:farid ; ex:project ex:atlas ; ex:role "Engineer"
+      .
+
+      ex:guest a ex:Person ; ex:name "Guest" ; ex:years 4 .'
+    graphs:
+      https://example.org/snapshot: '@prefix ex: <https://example.org/> .
+
+        @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+        @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+        @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+        @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+        @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+        ex:ella a ex:Person ; ex:name "Ella" ; ex:worksFor ex:northstar ; ex:email
+        "ava@work.example" ; ex:years 4 ; ex:reportsTo ex:farid ; ex:employeeId "E-001"
+        .
+
+        ex:farid a ex:Person ; ex:name "Farid" ; ex:worksFor ex:northstar ; ex:years
+        2 ; ex:reportsTo ex:cyra ; ex:employeeId "E-002" .
+
+        ex:cyra a ex:Person ; ex:name "Cyra" ; ex:worksFor ex:orbit ; ex:contractsFor
+        ex:northstar ; ex:email "cyra@work.example" ; ex:years 7 .
+
+        ex:dev a ex:Person ; ex:name "Dev" ; ex:worksFor ex:orbit ; ex:contractsFor
+        ex:orbit ; ex:years 1 .
+
+        ex:northstar a ex:Company ; ex:name "Northstar" .
+
+        ex:orbit a ex:Company ; ex:name "Orbit" .
+
+        ex:atlas a ex:Project ; ex:client ex:acme ; ex:name "Atlas" .
+
+        ex:beacon a ex:Project ; ex:client ex:delta ; ex:name "Beacon" .
+
+        ex:a1 a ex:Assignment ; ex:person ex:ella ; ex:project ex:atlas ; ex:role
+        "Engineer" .
+
+        ex:a2 a ex:Assignment ; ex:person ex:ella ; ex:project ex:beacon ; ex:role
+        "Reviewer" .
+
+        ex:a3 a ex:Assignment ; ex:person ex:farid ; ex:project ex:atlas ; ex:role
+        "Engineer" .
+
+        ex:guest a ex:Person ; ex:name "Guest" ; ex:years 4 .'
+  expected:
+    results:
+      bindings:
+      - person:
+          type: uri
+          value: https://example.org/ella
+        email:
+          type: literal
+          value: ava@work.example
+      - person:
+          type: uri
+          value: https://example.org/farid
+      - person:
+          type: uri
+          value: https://example.org/cyra
+        email:
+          type: literal
+          value: cyra@work.example
+      - person:
+          type: uri
+          value: https://example.org/dev
+      - person:
+          type: uri
+          value: https://example.org/guest
+    head:
+      vars:
+      - person
+      - email
+  feedback: Check the join variables, missing values, projected columns, and duplicate
+    counts.
+- name: Alternate workforce
+  public: false
+  data: '@prefix ex: <https://example.org/> .
+
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+    ex:ava a ex:Person ; ex:name "Ava" ; ex:worksFor ex:northstar ; ex:email "ava@work.example"
+    ; ex:years 4 ; ex:reportsTo ex:ben ; ex:employeeId "E-001" .
+
+    ex:ben a ex:Person ; ex:name "Ben" ; ex:worksFor ex:northstar ; ex:years 2 ; ex:reportsTo
+    ex:cyra ; ex:employeeId "E-002" .
+
+    ex:cyra a ex:Person ; ex:name "Cyra" ; ex:worksFor ex:orbit ; ex:contractsFor
+    ex:northstar ; ex:email "cyra@work.example" ; ex:years 7 .
+
+    ex:dev a ex:Person ; ex:name "Dev" ; ex:worksFor ex:orbit ; ex:contractsFor ex:orbit
+    ; ex:years 1 .
+
+    ex:northstar a ex:Company ; ex:name "Northstar" .
+
+    ex:orbit a ex:Company ; ex:name "Orbit" .
+
+    ex:atlas a ex:Project ; ex:client ex:acme ; ex:name "Atlas" .
+
+    ex:beacon a ex:Project ; ex:client ex:delta ; ex:name "Beacon" .
+
+    ex:a1 a ex:Assignment ; ex:person ex:ava ; ex:project ex:atlas ; ex:role "Engineer"
+    .
+
+    ex:a2 a ex:Assignment ; ex:person ex:ava ; ex:project ex:beacon ; ex:role "Reviewer"
+    .
+
+    ex:a3 a ex:Assignment ; ex:person ex:ben ; ex:project ex:atlas ; ex:role "Engineer"
+    .
+
+    ex:ava ex:contractsFor ex:northstar .
+
+    ex:visitor a ex:Person ; ex:email "visitor@personal.example" .'
+  format: turtle
+  input:
+    data: '@prefix ex: <https://example.org/> .
+
+      @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+      @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+      @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+      @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+      @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+      ex:ava a ex:Person ; ex:name "Ava" ; ex:worksFor ex:northstar ; ex:email "ava@work.example"
+      ; ex:years 4 ; ex:reportsTo ex:ben ; ex:employeeId "E-001" .
+
+      ex:ben a ex:Person ; ex:name "Ben" ; ex:worksFor ex:northstar ; ex:years 2 ;
+      ex:reportsTo ex:cyra ; ex:employeeId "E-002" .
+
+      ex:cyra a ex:Person ; ex:name "Cyra" ; ex:worksFor ex:orbit ; ex:contractsFor
+      ex:northstar ; ex:email "cyra@work.example" ; ex:years 7 .
+
+      ex:dev a ex:Person ; ex:name "Dev" ; ex:worksFor ex:orbit ; ex:contractsFor
+      ex:orbit ; ex:years 1 .
+
+      ex:northstar a ex:Company ; ex:name "Northstar" .
+
+      ex:orbit a ex:Company ; ex:name "Orbit" .
+
+      ex:atlas a ex:Project ; ex:client ex:acme ; ex:name "Atlas" .
+
+      ex:beacon a ex:Project ; ex:client ex:delta ; ex:name "Beacon" .
+
+      ex:a1 a ex:Assignment ; ex:person ex:ava ; ex:project ex:atlas ; ex:role "Engineer"
+      .
+
+      ex:a2 a ex:Assignment ; ex:person ex:ava ; ex:project ex:beacon ; ex:role "Reviewer"
+      .
+
+      ex:a3 a ex:Assignment ; ex:person ex:ben ; ex:project ex:atlas ; ex:role "Engineer"
+      .
+
+      ex:ava ex:contractsFor ex:northstar .
+
+      ex:visitor a ex:Person ; ex:email "visitor@personal.example" .'
+    graphs:
+      https://example.org/snapshot: '@prefix ex: <https://example.org/> .
+
+        @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+        @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+        @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+        @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+        @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+        ex:ava a ex:Person ; ex:name "Ava" ; ex:worksFor ex:northstar ; ex:email "ava@work.example"
+        ; ex:years 4 ; ex:reportsTo ex:ben ; ex:employeeId "E-001" .
+
+        ex:ben a ex:Person ; ex:name "Ben" ; ex:worksFor ex:northstar ; ex:years 2
+        ; ex:reportsTo ex:cyra ; ex:employeeId "E-002" .
+
+        ex:cyra a ex:Person ; ex:name "Cyra" ; ex:worksFor ex:orbit ; ex:contractsFor
+        ex:northstar ; ex:email "cyra@work.example" ; ex:years 7 .
+
+        ex:dev a ex:Person ; ex:name "Dev" ; ex:worksFor ex:orbit ; ex:contractsFor
+        ex:orbit ; ex:years 1 .
+
+        ex:northstar a ex:Company ; ex:name "Northstar" .
+
+        ex:orbit a ex:Company ; ex:name "Orbit" .
+
+        ex:atlas a ex:Project ; ex:client ex:acme ; ex:name "Atlas" .
+
+        ex:beacon a ex:Project ; ex:client ex:delta ; ex:name "Beacon" .
+
+        ex:a1 a ex:Assignment ; ex:person ex:ava ; ex:project ex:atlas ; ex:role "Engineer"
+        .
+
+        ex:a2 a ex:Assignment ; ex:person ex:ava ; ex:project ex:beacon ; ex:role
+        "Reviewer" .
+
+        ex:a3 a ex:Assignment ; ex:person ex:ben ; ex:project ex:atlas ; ex:role "Engineer"
+        .
+
+        ex:ava ex:contractsFor ex:northstar .
+
+        ex:visitor a ex:Person ; ex:email "visitor@personal.example" .'
+  expected:
+    results:
+      bindings:
+      - person:
+          type: uri
+          value: https://example.org/ava
+        email:
+          type: literal
+          value: ava@work.example
+      - person:
+          type: uri
+          value: https://example.org/ben
+      - person:
+          type: uri
+          value: https://example.org/cyra
+        email:
+          type: literal
+          value: cyra@work.example
+      - person:
+          type: uri
+          value: https://example.org/dev
+      - person:
+          type: uri
+          value: https://example.org/visitor
+        email:
+          type: literal
+          value: visitor@personal.example
+    head:
+      vars:
+      - person
+      - email
+  feedback: Check the join variables, missing values, projected columns, and duplicate
+    counts.
+execution: {}
+grading:
+  kind: sparql
+questions: []
+wrong_solutions:
+- query.rq: 'PREFIX ex: <https://example.org/>
+
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+    SELECT ?wrong WHERE { FILTER(false) }'
+variant_group: o19
+rubric:
+- All stated executable requirements pass.
+- Explain why the implementation has the intended meaning.
