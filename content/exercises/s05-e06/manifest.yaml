@@ -1,0 +1,214 @@
+id: s05-e06
+title: SQL company counts — handle duplicate inputs
+module_id: s05
+version: 1.0.0
+dataset_version: '1'
+grader_version: '1'
+runtime_version: '1'
+difficulty: Intermediate
+mode: practice
+runner: spark
+minutes: 15
+objectives:
+- 'SQL company counts: handle duplicate inputs. Assign the resulting DataFrame to
+  `result`. The output order is not graded.'
+prerequisites:
+- s05-e01
+statement: 'SQL company counts: handle duplicate inputs. Assign the resulting DataFrame
+  to `result`. The output order is not graded.
+
+
+  For an assessment attempt, explain the relevant semantic or operational contract
+  in the answer notes.'
+requirements:
+- Implement the behavior described above for every fixture.
+- Use the exact output variable names or file contract shown in the task.
+- Preserve identity, datatypes, and duplicate rows unless the task explicitly requests
+  a change.
+starter:
+  main.py: '# Assign the output DataFrame to result.
+
+    '
+solution:
+  main.py: 'people.createOrReplaceTempView("staff")
+
+    result = spark.sql("SELECT company_id, count(*) AS people FROM staff GROUP BY
+    company_id")'
+explanation: Use a CTE or temporary view where it makes the aggregation grain clearer.
+hints:
+- Start with the entity or output grain requested by the question.
+- Use a CTE or temporary view where it makes the aggregation grain clearer.
+- Use the public dataset to trace one result from its inputs. Then consider missing
+  values and repeated matches.
+sources:
+- title: Spark SQL Reference
+  url: https://spark.apache.org/docs/3.5.5/sql-ref.html
+- title: PySpark DataFrame Guide
+  url: https://spark.apache.org/docs/3.5.5/api/python/getting_started/quickstart_df.html
+source_review_date: '2026-09-15'
+status: ready
+review_status: authored_pending_runtime_audit
+fixtures:
+- name: Public sample
+  public: true
+  data: "{\n  \"tables\": {\n    \"people\": {\n      \"schema\": {\n        \"type\"\
+    : \"struct\",\n        \"fields\": [\n          {\n            \"name\": \"name\"\
+    ,\n            \"type\": \"string\",\n            \"nullable\": true,\n      \
+    \      \"metadata\": {}\n          },\n          {\n            \"name\": \"years\"\
+    ,\n            \"type\": \"long\",\n            \"nullable\": true,\n        \
+    \    \"metadata\": {}\n          },\n          {\n            \"name\": \"email\"\
+    ,\n            \"type\": \"string\",\n            \"nullable\": true,\n      \
+    \      \"metadata\": {}\n          },\n          {\n            \"name\": \"company_id\"\
+    ,\n            \"type\": \"long\",\n            \"nullable\": true,\n        \
+    \    \"metadata\": {}\n          }\n        ]\n      },\n      \"rows\": [\n \
+    \       [\n          \"Ava\",\n          4,\n          \"ava@work.example\",\n\
+    \          1\n        ],\n        [\n          \"Ben\",\n          2,\n      \
+    \    null,\n          1\n        ],\n        [\n          \"Cyra\",\n        \
+    \  7,\n          \"cyra@work.example\",\n          2\n        ],\n        [\n\
+    \          \"Dev\",\n          1,\n          null,\n          9\n        ]\n \
+    \     ]\n    },\n    \"companies\": {\n      \"schema\": {\n        \"type\":\
+    \ \"struct\",\n        \"fields\": [\n          {\n            \"name\": \"company_id\"\
+    ,\n            \"type\": \"long\",\n            \"nullable\": true,\n        \
+    \    \"metadata\": {}\n          },\n          {\n            \"name\": \"company_name\"\
+    ,\n            \"type\": \"string\",\n            \"nullable\": true,\n      \
+    \      \"metadata\": {}\n          }\n        ]\n      },\n      \"rows\": [\n\
+    \        [\n          1,\n          \"Northstar\"\n        ],\n        [\n   \
+    \       2,\n          \"Orbit\"\n        ]\n      ]\n    }\n  }\n}"
+  format: json
+  input:
+    tables:
+      people:
+        schema: &id001
+          type: struct
+          fields:
+          - name: name
+            type: string
+            nullable: true
+            metadata: {}
+          - name: years
+            type: long
+            nullable: true
+            metadata: {}
+          - name: email
+            type: string
+            nullable: true
+            metadata: {}
+          - name: company_id
+            type: long
+            nullable: true
+            metadata: {}
+        rows: &id002
+        - - Ava
+          - 4
+          - ava@work.example
+          - 1
+        - - Ben
+          - 2
+          - null
+          - 1
+        - - Cyra
+          - 7
+          - cyra@work.example
+          - 2
+        - - Dev
+          - 1
+          - null
+          - 9
+      companies:
+        schema: &id003
+          type: struct
+          fields:
+          - name: company_id
+            type: long
+            nullable: true
+            metadata: {}
+          - name: company_name
+            type: string
+            nullable: true
+            metadata: {}
+        rows: &id004
+        - - 1
+          - Northstar
+        - - 2
+          - Orbit
+  expected:
+    schema:
+      type: struct
+      fields:
+      - name: company_id
+        type: long
+        nullable: true
+        metadata: {}
+      - name: people
+        type: long
+        nullable: false
+        metadata: {}
+    rows: &id005
+    - company_id: 1
+      people: 2
+    - company_id: 2
+      people: 1
+    - company_id: 9
+      people: 1
+  feedback: Check schema, duplicate behavior, null ordering, the declared output grain,
+    and the execution-plan evidence for this module.
+- name: Private contract fixture
+  public: false
+  data: "{\n  \"tables\": {\n    \"people\": {\n      \"schema\": {\n        \"type\"\
+    : \"struct\",\n        \"fields\": [\n          {\n            \"name\": \"name\"\
+    ,\n            \"type\": \"string\",\n            \"nullable\": true,\n      \
+    \      \"metadata\": {}\n          },\n          {\n            \"name\": \"years\"\
+    ,\n            \"type\": \"long\",\n            \"nullable\": true,\n        \
+    \    \"metadata\": {}\n          },\n          {\n            \"name\": \"email\"\
+    ,\n            \"type\": \"string\",\n            \"nullable\": true,\n      \
+    \      \"metadata\": {}\n          },\n          {\n            \"name\": \"company_id\"\
+    ,\n            \"type\": \"long\",\n            \"nullable\": true,\n        \
+    \    \"metadata\": {}\n          }\n        ]\n      },\n      \"rows\": [\n \
+    \       [\n          \"Ava\",\n          4,\n          \"ava@work.example\",\n\
+    \          1\n        ],\n        [\n          \"Ben\",\n          2,\n      \
+    \    null,\n          1\n        ],\n        [\n          \"Cyra\",\n        \
+    \  7,\n          \"cyra@work.example\",\n          2\n        ],\n        [\n\
+    \          \"Dev\",\n          1,\n          null,\n          9\n        ]\n \
+    \     ]\n    },\n    \"companies\": {\n      \"schema\": {\n        \"type\":\
+    \ \"struct\",\n        \"fields\": [\n          {\n            \"name\": \"company_id\"\
+    ,\n            \"type\": \"long\",\n            \"nullable\": true,\n        \
+    \    \"metadata\": {}\n          },\n          {\n            \"name\": \"company_name\"\
+    ,\n            \"type\": \"string\",\n            \"nullable\": true,\n      \
+    \      \"metadata\": {}\n          }\n        ]\n      },\n      \"rows\": [\n\
+    \        [\n          1,\n          \"Northstar\"\n        ],\n        [\n   \
+    \       2,\n          \"Orbit\"\n        ]\n      ]\n    }\n  }\n}"
+  format: json
+  input:
+    tables:
+      people:
+        schema: *id001
+        rows: *id002
+      companies:
+        schema: *id003
+        rows: *id004
+  expected:
+    schema:
+      type: struct
+      fields:
+      - name: company_id
+        type: long
+        nullable: true
+        metadata: {}
+      - name: people
+        type: long
+        nullable: false
+        metadata: {}
+    rows: *id005
+  feedback: Check schema, duplicate behavior, null ordering, the declared output grain,
+    and the execution-plan evidence for this module.
+execution: {}
+grading:
+  kind: spark
+  tolerance: 1.0e-09
+questions: []
+wrong_solutions:
+- main.py: result = people.limit(0)
+variant_group: s05
+rubric:
+- All stated executable requirements pass.
+- Explain why the implementation has the intended meaning.

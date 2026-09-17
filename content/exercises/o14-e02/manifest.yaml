@@ -117,16 +117,16 @@ fixtures:
       bindings:
       - s:
           type: uri
-          value: https://example.org/ava
-        name:
-          type: literal
-          value: Ava
-      - s:
-          type: uri
           value: https://example.org/ben
         name:
           type: literal
           value: Ben
+      - s:
+          type: uri
+          value: https://example.org/ava
+        name:
+          type: literal
+          value: Ava
     head:
       vars:
       - s

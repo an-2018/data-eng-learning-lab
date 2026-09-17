@@ -630,7 +630,8 @@ tracks:
     - &id009
       title: PySpark DataFrame Guide
       url: https://spark.apache.org/docs/3.5.5/api/python/getting_started/quickstart_df.html
-    - title: Spark Performance Tuning
+    - &id011
+      title: Spark Performance Tuning
       url: https://spark.apache.org/docs/3.5.5/sql-performance-tuning.html
     status: authored
     prerequisites: []
@@ -749,6 +750,295 @@ tracks:
       definition: Grouping defines the unit represented by each output row.
     - term: Verify schema and multiplicity
       definition: DataFrame correctness includes schema and all row occurrences.
+  - id: s05
+    number: 5
+    title: Spark SQL and relational transformations
+    level: Intermediate
+    description: Register and query temporary views · CTEs and grouping levels · Set
+      operations and schema compatibility · SQL semantics and DataFrame equivalence
+    lessons:
+    - id: s05-l1
+      title: Register and query temporary views
+      minutes: 8
+    - id: s05-l2
+      title: CTEs and grouping levels
+      minutes: 8
+    - id: s05-l3
+      title: Set operations and schema compatibility
+      minutes: 8
+    - id: s05-l4
+      title: SQL semantics and DataFrame equivalence
+      minutes: 8
+    sources:
+    - *id010
+    - *id009
+    status: authored
+    prerequisites:
+    - s04
+    glossary:
+    - term: Register and query temporary views
+      definition: A DataFrame can be registered as a temporary view so Spark SQL and
+        DataFrame code share the same logical plan.
+    - term: CTEs and grouping levels
+      definition: A common table expression names an intermediate relation.
+    - term: Set operations and schema compatibility
+      definition: UNION ALL preserves repeated rows while UNION removes duplicates.
+    - term: SQL semantics and DataFrame equivalence
+      definition: Spark SQL and the DataFrame API can express the same logical operation.
+  - id: s06
+    number: 6
+    title: Window functions and deterministic deduplication
+    level: Intermediate
+    description: Partition and order a window · Choose latest records deterministically
+      · Running and moving calculations · Ranking, ties, and null ordering
+    lessons:
+    - id: s06-l1
+      title: Partition and order a window
+      minutes: 8
+    - id: s06-l2
+      title: Choose latest records deterministically
+      minutes: 8
+    - id: s06-l3
+      title: Running and moving calculations
+      minutes: 8
+    - id: s06-l4
+      title: Ranking, ties, and null ordering
+      minutes: 8
+    sources:
+    - *id010
+    - *id009
+    status: authored
+    prerequisites:
+    - s05
+    glossary:
+    - term: Partition and order a window
+      definition: A window keeps individual rows while calculating over a defined
+        partition and order.
+    - term: Choose latest records deterministically
+      definition: Use row_number with a complete ordering to keep exactly one record
+        per business key.
+    - term: Running and moving calculations
+      definition: Window frames define which ordered rows contribute to an aggregate.
+    - term: Ranking, ties, and null ordering
+      definition: row_number breaks ties by order position, rank leaves gaps after
+        ties, and dense_rank does not.
+  - id: s07
+    number: 7
+    title: Files, formats, and partitioning
+    level: Intermediate
+    description: Choose a file contract · Partition for access patterns · Schema evolution
+      deliberately · Small files and compaction
+    lessons:
+    - id: s07-l1
+      title: Choose a file contract
+      minutes: 8
+    - id: s07-l2
+      title: Partition for access patterns
+      minutes: 8
+    - id: s07-l3
+      title: Schema evolution deliberately
+      minutes: 8
+    - id: s07-l4
+      title: Small files and compaction
+      minutes: 8
+    sources:
+    - *id009
+    - *id010
+    status: authored
+    prerequisites:
+    - s06
+    glossary:
+    - term: Choose a file contract
+      definition: A file format carries both data and operational tradeoffs.
+    - term: Partition for access patterns
+      definition: Partition columns should match common filters and have manageable
+        cardinality.
+    - term: Schema evolution deliberately
+      definition: Additive, nullable columns are usually easier to evolve than renamed
+        or repurposed columns.
+    - term: Small files and compaction
+      definition: Many small files create task scheduling overhead and metadata pressure.
+  - id: s08
+    number: 8
+    title: Testing and repeatable Spark pipelines
+    level: Intermediate
+    description: Test the contract, not an implementation · Idempotent batch processing
+      · Data quality and quarantine · Repeatability and observability
+    lessons:
+    - id: s08-l1
+      title: Test the contract, not an implementation
+      minutes: 8
+    - id: s08-l2
+      title: Idempotent batch processing
+      minutes: 8
+    - id: s08-l3
+      title: Data quality and quarantine
+      minutes: 8
+    - id: s08-l4
+      title: Repeatability and observability
+      minutes: 8
+    sources:
+    - *id009
+    - *id010
+    status: authored
+    prerequisites:
+    - s07
+    glossary:
+    - term: Test the contract, not an implementation
+      definition: A Spark transformation is correct when its schema and row multiset
+        meet the contract.
+    - term: Idempotent batch processing
+      definition: A retry-safe batch run produces the intended logical output when
+        the same source snapshot is processed again.
+    - term: Data quality and quarantine
+      definition: Separate valid outputs from rows that fail a stated contract.
+    - term: Repeatability and observability
+      definition: Pin runtime versions, input snapshots, configuration, and timezone.
+  - id: s09
+    number: 9
+    title: Jobs, stages, partitions, and shuffles
+    level: Advanced
+    description: Read an execution plan · Control partition counts · Recognize wide
+      and narrow transformations · Diagnose skew
+    lessons:
+    - id: s09-l1
+      title: Read an execution plan
+      minutes: 8
+    - id: s09-l2
+      title: Control partition counts
+      minutes: 8
+    - id: s09-l3
+      title: Recognize wide and narrow transformations
+      minutes: 8
+    - id: s09-l4
+      title: Diagnose skew
+      minutes: 8
+    sources:
+    - *id011
+    - *id009
+    status: authored
+    prerequisites:
+    - s08
+    glossary:
+    - term: Read an execution plan
+      definition: A logical plan describes intent; Spark turns it into a physical
+        plan of jobs, stages, and tasks.
+    - term: Control partition counts
+      definition: Partition count is a resource decision.
+    - term: Recognize wide and narrow transformations
+      definition: A narrow transformation can be computed from one parent partition;
+        a wide one redistributes data.
+    - term: Diagnose skew
+      definition: Skew occurs when one key or partition has disproportionately more
+        work.
+  - id: s10
+    number: 10
+    title: Join strategies, skew, caching, and adaptive execution
+    level: Advanced
+    description: Choose joins using evidence · Handle skewed joins · Cache only reusable
+      work · Adaptive query execution
+    lessons:
+    - id: s10-l1
+      title: Choose joins using evidence
+      minutes: 8
+    - id: s10-l2
+      title: Handle skewed joins
+      minutes: 8
+    - id: s10-l3
+      title: Cache only reusable work
+      minutes: 8
+    - id: s10-l4
+      title: Adaptive query execution
+      minutes: 8
+    sources:
+    - *id011
+    - *id010
+    status: authored
+    prerequisites:
+    - s09
+    glossary:
+    - term: Choose joins using evidence
+      definition: Broadcast joins can avoid shuffling a sufficiently small side.
+    - term: Handle skewed joins
+      definition: A hot key can make one join task dominate the job.
+    - term: Cache only reusable work
+      definition: Caching trades memory for avoiding repeated computation.
+    - term: Adaptive query execution
+      definition: AQE can revise partitioning and join choices from runtime statistics.
+  - id: s11
+    number: 11
+    title: Structured Streaming and event-time correctness
+    level: Advanced
+    description: Streaming as incremental tables · Event time and watermarks · Duplicates
+      and replay · Bounded test streams
+    lessons:
+    - id: s11-l1
+      title: Streaming as incremental tables
+      minutes: 8
+    - id: s11-l2
+      title: Event time and watermarks
+      minutes: 8
+    - id: s11-l3
+      title: Duplicates and replay
+      minutes: 8
+    - id: s11-l4
+      title: Bounded test streams
+      minutes: 8
+    sources:
+    - *id009
+    - *id010
+    status: authored
+    prerequisites:
+    - s10
+    glossary:
+    - term: Streaming as incremental tables
+      definition: Structured Streaming applies a query incrementally to arriving records.
+    - term: Event time and watermarks
+      definition: Event time is when an event happened; processing time is when the
+        system observed it.
+    - term: Duplicates and replay
+      definition: A restart can replay input.
+    - term: Bounded test streams
+      definition: Test streaming logic with bounded batches that include late, duplicate,
+        and out-of-order events.
+  - id: s12
+    number: 12
+    title: Spark deployment and observability
+    level: Advanced
+    description: Package a reproducible job · Observe the right signals · Recover
+      safely · Control cost and access
+    lessons:
+    - id: s12-l1
+      title: Package a reproducible job
+      minutes: 8
+    - id: s12-l2
+      title: Observe the right signals
+      minutes: 8
+    - id: s12-l3
+      title: Recover safely
+      minutes: 8
+    - id: s12-l4
+      title: Control cost and access
+      minutes: 8
+    sources:
+    - *id011
+    - *id009
+    status: authored
+    prerequisites:
+    - s11
+    glossary:
+    - term: Package a reproducible job
+      definition: A production job records Spark version, Python dependencies, configuration,
+        input snapshot, output location, and a stable release identifier.
+    - term: Observe the right signals
+      definition: Monitor input/output counts, rejected rows, stage duration, shuffle
+        bytes, executor memory, retries, and checkpoint health.
+    - term: Recover safely
+      definition: Recovery begins with an immutable input snapshot and a known-good
+        output version.
+    - term: Control cost and access
+      definition: Set resource limits, least-privilege credentials, storage retention,
+        and budget alerts.
 - id: data-engineering
   title: Data engineering
   description: A future learning path with a prepared curriculum outline.

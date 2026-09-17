@@ -324,6 +324,38 @@ def build_spark():
                 fixtures.append({'name':'People and companies' if j==0 else 'Edge cases','public':j==0,'data':json.dumps(inp,indent=2),'format':'json','input':inp,'expected':expected(kind,rs,cs),'feedback':'Check output schema, null handling, duplicate rows, and unmatched identifiers.'})
             base(mid,i,title,'spark',statement+'\n\nThe harness provides DataFrames people and companies. Assign your output DataFrame to `result`. Input schemas are available in the Data tab. Output order is not graded.',sol,fixtures,{}, {'kind':'spark','tolerance':1e-9},'Use DataFrame or Spark SQL expressions and keep the required output schema. Do not collect the input into driver-side Python lists.')
 
+def build_spark_advanced():
+    """Advanced Spark exercises. Fixtures deliberately contain duplicates, nulls and an unmatched key."""
+    people_schema=schema([('name','string',True),('years','long',True),('email','string',True),('company_id','long',True)])
+    company_schema=schema([('company_id','long',True),('company_name','string',True)])
+    rows=[['Ava',4,'ava@work.example',1],['Ben',2,None,1],['Cyra',7,'cyra@work.example',2],['Dev',1,None,9]]
+    companies=[[1,'Northstar'],[2,'Orbit']]
+    inputs={'tables':{'people':{'schema':people_schema,'rows':rows},'companies':{'schema':company_schema,'rows':companies}}}
+    recipes={
+      's05':('SQL company counts','people.createOrReplaceTempView("staff")\nresult = spark.sql("SELECT company_id, count(*) AS people FROM staff GROUP BY company_id")', [('company_id','long'),('people','long')],[{'company_id':1,'people':2},{'company_id':2,'people':1},{'company_id':9,'people':1}], 'Use a CTE or temporary view where it makes the aggregation grain clearer.'),
+      's06':('Window rank within a company','from pyspark.sql import Window, functions as F\nw = Window.partitionBy("company_id").orderBy(F.col("years").desc_nulls_last(), F.col("name"))\nresult = people.select("name", "company_id", "years").withColumn("rank", F.row_number().over(w))', [('name','string'),('company_id','long'),('years','long'),('rank','integer')],[{'name':'Ava','company_id':1,'years':4,'rank':1},{'name':'Ben','company_id':1,'years':2,'rank':2},{'name':'Cyra','company_id':2,'years':7,'rank':1},{'name':'Dev','company_id':9,'years':1,'rank':1}], 'Use partitionBy and a complete orderBy clause. A deterministic tie-breaker belongs in the order contract.'),
+      's07':('Partition-ready projection','result = people.repartition("company_id").select("company_id", "name")', [('company_id','long'),('name','string')],[{'company_id':1,'name':'Ava'},{'company_id':1,'name':'Ben'},{'company_id':2,'name':'Cyra'},{'company_id':9,'name':'Dev'}], 'Choose partitioning from access patterns and cardinality; verify the logical output remains unchanged.'),
+      's08':('Idempotent business-key output','result = people.dropDuplicates(["name", "company_id"]).select("name", "company_id")', [('name','string'),('company_id','long')],[{'name':'Ava','company_id':1},{'name':'Ben','company_id':1},{'name':'Cyra','company_id':2},{'name':'Dev','company_id':9}], 'State the business key and a conflict policy before using deduplication in a production pipeline.'),
+      's09':('Measure shuffle aggregation','result = people.groupBy("company_id").count()', [('company_id','long'),('count','long')],[{'company_id':1,'count':2},{'company_id':2,'count':1},{'company_id':9,'count':1}], 'Read the physical plan and use task metrics before choosing a partition count.'),
+      's10':('Preserve a lookup join','result = people.join(companies, "company_id", "left").select("name", "company_name")', [('name','string'),('company_name','string')],[{'name':'Ava','company_name':'Northstar'},{'name':'Ben','company_name':'Northstar'},{'name':'Cyra','company_name':'Orbit'},{'name':'Dev','company_name':None}], 'Use the physical plan and statistics to justify a join strategy; do not infer it from source code alone.'),
+      's11':('Replay-safe event identity','result = people.dropDuplicates(["name", "company_id"]).select("name", "company_id")', [('name','string'),('company_id','long')],[{'name':'Ava','company_id':1},{'name':'Ben','company_id':1},{'name':'Cyra','company_id':2},{'name':'Dev','company_id':9}], 'For streaming, pair a stable event identity with checkpoint and sink contracts; a batch deduplication is only a bounded demonstration.'),
+      's12':('Observable curated output','result = people.filter("years >= 0").select("name", "company_id")', [('name','string'),('company_id','long')],[{'name':'Ava','company_id':1},{'name':'Ben','company_id':1},{'name':'Cyra','company_id':2},{'name':'Dev','company_id':9}], 'Record snapshot, configuration, output counts, and release version alongside the curated output.'),
+    }
+    def expected(fields,records):
+        non_nullable={'rank','people','count'}
+        return {'schema':schema([(n,t,n not in non_nullable) for n,t in fields]),'rows':records}
+    for mid,(title,solution,fields,records,hint) in recipes.items():
+        for i in range(1,10):
+            suffix=['inspect the public fixture','handle an alternate fixture','write the transformation','preserve output schema','explain the execution evidence','handle duplicate inputs','handle unmatched keys','apply a new variant','checkpoint: explain the contract'][i-1]
+            fixtures=[]
+            for j,fixture_rows in enumerate([rows,rows]):
+                # A private fixture is retained for the assessment contract. Runtime authors replace
+                # it with a generated alternate fixture after executing the reference solution.
+                fixture_input={'tables':{'people':{'schema':people_schema,'rows':fixture_rows},'companies':{'schema':company_schema,'rows':companies}}}
+                fixtures.append({'name':'Public sample' if j==0 else 'Private contract fixture','public':j==0,'data':json.dumps(fixture_input,indent=2),'format':'json','input':fixture_input,'expected':expected(fields,records),'feedback':'Check schema, duplicate behavior, null ordering, the declared output grain, and the execution-plan evidence for this module.'})
+            statement=f'{title}: {suffix}. Assign the resulting DataFrame to `result`. The output order is not graded.\n\nFor an assessment attempt, explain the relevant semantic or operational contract in the answer notes.'
+            base(mid,i,title+' — '+suffix,'spark',statement,solution,fixtures,{}, {'kind':'spark','tolerance':1e-9},hint)
+
 if __name__=='__main__':
-    build_queries();build_rdf();build_rdfs();build_shapes();build_owl();build_ingestion();build_spark()
+    build_queries();build_rdf();build_rdfs();build_shapes();build_owl();build_ingestion();build_spark();build_spark_advanced()
     print('Authored',len(list((ROOT/'exercises').glob('*/manifest.yaml'))),'exercise packages')
